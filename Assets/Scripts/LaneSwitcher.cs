@@ -7,7 +7,7 @@ public class LaneSwitcher : MonoBehaviour
 {
     public float TurnAngle;
     public float TurnPoints;
-    public bool CanTurn;
+    private bool CanTurn;
     public float UpdateTimeStatic;
     public float UpdateTime = 3f;
 

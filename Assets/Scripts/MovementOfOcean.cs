@@ -5,7 +5,7 @@ using UnityEngine;
 public class MovementOfOcean : MonoBehaviour
 {
     public float MovementSpeed;
-    public bool ShouldRun;
+    private bool ShouldRun;
 
     void Start()
     {
