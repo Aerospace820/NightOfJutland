@@ -5,14 +5,19 @@ using UnityEngine;
 public class MoveAndRotateAI : MonoBehaviour
 {
     public Transform Player;
-    private bool CanGo;
+    private bool CanGo, CanGoOnce, GoTillEnd, LastOne;
     public bool IsNonCrossingShip;
     public float speed;
     public float NeededDistanceShip;
     public float TurnTime;
+    public float Endtime;
+    public float rotationTolerance;
     void Start()
     {
         CanGo = false;
+        CanGoOnce = true;
+        GoTillEnd = true;
+        LastOne = true;
     }
 
     public void LetsGo()
@@ -25,18 +30,21 @@ public class MoveAndRotateAI : MonoBehaviour
     {
         if (CanGo)
         {
-            float PlayerPos = Vector3.Distance(Player.position, transform.position);
-
-            if (PlayerPos < NeededDistanceShip)
+            if(CanGoOnce)
             {
-                Debug.Log("Distance is Enough");
+                StartCoroutine(EndStuff());
+                CanGoOnce = false;
+            }
+
+
+            if (transform.position.x > -42.5f)
+            {
 
                 Quaternion currentRotation = transform.rotation;
-                Quaternion targetRotation = Quaternion.Euler(Vector3.zero);
+                Quaternion targetRotation = Quaternion.Euler(0f, 180f, 0f);
 
-                if (IsNonCrossingShip)
+                if (IsNonCrossingShip && GoTillEnd)
                 {
-                    Debug.Log("Rotationswork");
                     transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * TurnTime);
                 }
         
@@ -44,6 +52,32 @@ public class MoveAndRotateAI : MonoBehaviour
 
             transform.Translate(Vector3.forward * speed * Time.deltaTime);
 
+        }
+    }
+
+    IEnumerator EndStuff()
+    {
+        yield return new WaitForSeconds(Endtime);
+        if(IsNonCrossingShip)
+        {
+            Debug.Log("End For Now");
+            GoTillEnd = false;
+            Quaternion endtargetRotation = Quaternion.Euler(0f, 200f, 0f);
+            while(LastOne)
+            {
+                Quaternion endcurrentRotation = transform.rotation;
+                transform.rotation = Quaternion.Slerp(endcurrentRotation,endtargetRotation, Time.deltaTime * TurnTime);
+                if (Quaternion.Angle(endcurrentRotation, endtargetRotation) < rotationTolerance)
+                {
+                    LastOne = false;
+                }
+            }
+        }
+
+        else if(!IsNonCrossingShip)
+        {
+            float EndtimeNew = Endtime/4f;
+            yield return new WaitForSeconds(EndtimeNew);
         }
     }
 }
