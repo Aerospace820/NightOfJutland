@@ -5,7 +5,7 @@ using UnityEngine;
 public class MoveAndRotateAI : MonoBehaviour
 {
     public Transform Player;
-    private bool CanGo, CanGoOnce, GoTillEnd, LastOne;
+    private bool CanGo, CanGoOnce, GoTillEnd;
     public bool IsNonCrossingShip;
     public float speed;
     public float NeededDistanceShip;
@@ -17,7 +17,6 @@ public class MoveAndRotateAI : MonoBehaviour
         CanGo = false;
         CanGoOnce = true;
         GoTillEnd = true;
-        LastOne = true;
     }
 
     public void LetsGo()
@@ -58,20 +57,21 @@ public class MoveAndRotateAI : MonoBehaviour
     IEnumerator EndStuff()
     {
         yield return new WaitForSeconds(Endtime);
-        if(IsNonCrossingShip)
+        if (IsNonCrossingShip)
         {
             Debug.Log("End For Now");
             GoTillEnd = false;
             Quaternion endtargetRotation = Quaternion.Euler(0f, 200f, 0f);
-            while(LastOne)
+            float elapsedTime = 0f;
+
+            while (elapsedTime < 1f)
             {
                 Quaternion endcurrentRotation = transform.rotation;
-                transform.rotation = Quaternion.Slerp(endcurrentRotation,endtargetRotation, Time.deltaTime * TurnTime);
-                if (Quaternion.Angle(endcurrentRotation, endtargetRotation) < rotationTolerance)
-                {
-                    LastOne = false;
-                }
+                transform.rotation = Quaternion.Slerp(endcurrentRotation, endtargetRotation, elapsedTime);
+                elapsedTime += Time.deltaTime * 0.0033f;
+                yield return null;
             }
+
         }
 
         else if(!IsNonCrossingShip)
