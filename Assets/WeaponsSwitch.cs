@@ -4,24 +4,27 @@ using UnityEngine;
 
 public class WeaponsSwitch : MonoBehaviour
 {
-    public Transform TorpedoLauncher;
+    public Transform TorpedoLauncher1, TorpedoLauncher2;
     public GameObject Torpedo;
     public Light SearchLight1, SearchLight2;
-    public float SearchReload;
-    public float IncreaserStatic, Increaser, DecreaseStatic, Decreaser;
+    public float SearchReload, SearchAmountReload;
+    public float SearchAmount, WaitTimeSearch;
+    private bool NoMultipleLights;
     void Start()
     {
-        SearchLight1 = GetComponent<Light>();
-        SearchLight2 = GetComponent<Light>();
         SearchLightInactive();
+        SearchAmount = 5f;
+        StartCoroutine(ReloadSearchers());
+        NoMultipleLights = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.U))
+        if(Input.GetKeyDown(KeyCode.U) && SearchAmount > 0f & NoMultipleLights)
         {
             TurnOnSearchers();
+            NoMultipleLights = false;
         }
     }
 //BUNCH OF SEARCHLIGHT STUFF
@@ -34,41 +37,21 @@ public class WeaponsSwitch : MonoBehaviour
     IEnumerator TimeLimitGameLights()
     {
         yield return new WaitForSeconds(SearchReload);
+        SearchAmount--;
         SearchLightInactive();
+        yield return new WaitForSeconds(WaitTimeSearch);
+        NoMultipleLights = true;
     }
 
-    IEnumerator IncreaseLight()
+    IEnumerator ReloadSearchers()
     {
-        while(Increaser != 5)
-        {
-            yield return new WaitForSeconds(0.25f);
-            SearchLight1.intensity += 0.1f;
-            SearchLight2.intensity += 0.1f;
-            Increaser++;
-        }
-    }
-
-    IEnumerator DecreaseLight()
-    {
-        while(Decreaser != 0)
-        {
-            yield return new WaitForSeconds(0.25f);
-            SearchLight1.intensity += 0.1f;
-            SearchLight2.intensity -= 0.1f;
-            Decreaser--;
-        }
-
-        if(Decreaser == 0f)
-        {
-            SearchLight1.enabled = false;
-            SearchLight2.enabled = false;
-        }
+        yield return new WaitForSeconds(SearchAmountReload);
+        SearchAmount++;
+        StartCoroutine(ReloadSearchers());
     }
 //SEARCHLIGHT ACTIVES;
     void SearchLightInactive()
     {
-        Decreaser = DecreaseStatic;
-        StartCoroutine(DecreaseLight());
         SearchLight1.enabled = false;
         SearchLight2.enabled = false;
     }
@@ -78,8 +61,6 @@ public class WeaponsSwitch : MonoBehaviour
     {
         SearchLight1.enabled = true;
         SearchLight2.enabled = true;
-        Increaser = IncreaserStatic;
-        StartCoroutine(IncreaseLight());
     }
 
 }
