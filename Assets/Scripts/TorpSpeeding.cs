@@ -5,13 +5,13 @@ using UnityEngine;
 public class TorpSpeeding : MonoBehaviour
 {
     public float speed = 5f;
-    public bool IsNotMain;
+    void OnBecameInvisible()
+    {
+        Object.Destroy(gameObject);
+    }
 
     void Update()
     {
-        if(IsNotMain)
-        {
-            transform.Translate(Vector3.forward * speed * Time.deltaTime);
-        }
+        transform.Translate(Vector3.forward * speed * Time.deltaTime);
     }
 }
