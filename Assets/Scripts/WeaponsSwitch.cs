@@ -9,16 +9,21 @@ public class WeaponsSwitch : MonoBehaviour
     public Transform TorpedoLauncher1, TorpedoLauncher2, GunEnd1, GunEnd2;
     public GameObject Torpedo, Bullet;
     public Light SearchLight1, SearchLight2;
+    public Light Ship1, Ship2, Ship3;
     public float SearchReload, SearchAmountReload;
     public float SearchAmount, WaitTimeSearch;
     public float TorpAmount, TorpReloadTime;
     public float ShotAmount, ShotReloadTime;
+    public float ShotReloadShot;
 
     private bool NoMultipleLights, NoMultipleTorps, NoMultipleShots;
+    private static int lastSelectedTorpedoLauncherIndex = -1;
+    private static int lastSelectedTurretIndex = -1;
     void Start()
     {
         SearchLightInactive();
         StartCoroutine(ReloadSearchersAndTorps());
+        StartCoroutine(MoreShots());
         NothingMultiple();
     }
 
@@ -38,26 +43,35 @@ public class WeaponsSwitch : MonoBehaviour
             NoMultipleLights = false;
         }
 
-        if(Input.GetKeyDown(KeyCode.Y) && NoMultipleTorps && TorpAmount > 0f)
+        if (Input.GetKeyDown(KeyCode.Y) && NoMultipleTorps && TorpAmount > 0f)
         {
             NoMultipleTorps = false;
             StartCoroutine(TorpReloads());
-            Transform TorpedoLaunch = Random.Range(0,2) == 0 ? TorpedoLauncher1:TorpedoLauncher2;
+
+            int nextTorpedoLauncherIndex = (lastSelectedTorpedoLauncherIndex + 1) % 2;
+
+            Transform TorpedoLaunch = nextTorpedoLauncherIndex == 0 ? TorpedoLauncher1 : TorpedoLauncher2;
             Instantiate(Torpedo, TorpedoLaunch.position, TorpedoLaunch.rotation);
+
+            lastSelectedTorpedoLauncherIndex = nextTorpedoLauncherIndex;
         }
 
-        if(Input.GetKeyDown(KeyCode.Z) && NoMultipleShots && ShotAmount > 0f)
+        if (Input.GetKeyDown(KeyCode.Z) && NoMultipleShots && ShotAmount > 0f)
         {
             NoMultipleShots = false;
             StartCoroutine(ShotReloads());
-            Transform GunShoot = Random.Range(0,2) == 0 ? GunEnd1:GunEnd2;
+
+            int nextTurretIndex = (lastSelectedTurretIndex + 1) % 2;
+
+            Transform GunShoot = nextTurretIndex == 0 ? GunEnd1 : GunEnd2;
             Instantiate(Bullet, GunShoot.position, GunShoot.rotation);
+
+            lastSelectedTurretIndex = nextTurretIndex;
         }
 
         SearchText.text = "You have " + SearchAmount.ToString() + " Search Light(s) Left";
         TorpedoText.text = "You have " + TorpAmount.ToString() + " Torpedo(s) Left";
         ShellText.text = "You have " + ShotAmount.ToString() + " Shell(s) Left";
-
     }
 //BUNCH OF SEARCHLIGHT STUFF
     public void TurnOnSearchers()
@@ -87,6 +101,9 @@ public class WeaponsSwitch : MonoBehaviour
     {
         SearchLight1.enabled = false;
         SearchLight2.enabled = false;
+        Ship1.enabled = true;
+        Ship2.enabled = false;
+        Ship3.enabled = true;
     }
 
 
@@ -94,6 +111,9 @@ public class WeaponsSwitch : MonoBehaviour
     {
         SearchLight1.enabled = true;
         SearchLight2.enabled = true;
+        Ship1.enabled = false;
+        Ship2.enabled = true;
+        Ship3.enabled = false;
     }
 //TORPEDO STUFF
     IEnumerator TorpReloads()
@@ -108,6 +128,13 @@ public class WeaponsSwitch : MonoBehaviour
         ShotAmount--;
         yield return new WaitForSeconds(ShotReloadTime);
         NoMultipleShots = true;
+    }
+
+    IEnumerator MoreShots()
+    {
+        yield return new WaitForSeconds(ShotReloadShot);
+        ShotAmount++;
+        StartCoroutine(MoreShots());
     }
 
 
