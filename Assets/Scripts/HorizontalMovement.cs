@@ -9,10 +9,10 @@ public class HorizontalMovement : MonoBehaviour
     public GameObject torp;
     public Transform Gunend;
     public Transform player;
-    public float AngleNeg, AnglePos;
     public float rotationSpeed;
     public float AttackStatic = 3f;
     public float AttackTime = 3f;
+    public bool IsTurret;
     void Update()
     {
         if (player != null)
@@ -20,11 +20,14 @@ public class HorizontalMovement : MonoBehaviour
             Vector3 directionPlayer = player.position - transform.position;
             Quaternion playerRot = Quaternion.LookRotation(new Vector3(directionPlayer.x, 0, directionPlayer.z));
             transform.rotation = Quaternion.Slerp(transform.rotation, playerRot, Time.deltaTime * rotationSpeed);
-            AttackTime -= Time.deltaTime;
-            if(AttackTime < 0)
+            if(IsTurret)
             {
-                AttackTime = AttackStatic;
-                Shot();
+                AttackTime -= Time.deltaTime;
+                if(AttackTime < 0)
+                {
+                    AttackTime = AttackStatic;
+                    Shot();
+                }
             }
 
         }
@@ -36,5 +39,6 @@ public class HorizontalMovement : MonoBehaviour
     void Shot()
     {
         GameObject bulletstuff = Instantiate(bullet, Gunend.position, Gunend.rotation);
+        Debug.Log("ItHappened");
     }
 }

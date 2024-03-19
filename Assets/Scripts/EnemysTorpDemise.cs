@@ -3,23 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 public class EnemysTorpDemise : MonoBehaviour
 {
-    public string targetTag = "TorpedoAlly";
-
-    public float detectionDistance = 5f;
+    public string TorpTag, BulletTag;
+    public float TorpDam, BulletDam;
     public float Health;
 
-    void Update()
+    void OnTriggerEnter(Collider other)
     {
-        GameObject[] targets = GameObject.FindGameObjectsWithTag(targetTag);
-
-        foreach (GameObject target in targets)
+        if (other.CompareTag(TorpTag))
         {
-            float distance = Vector3.Distance(transform.position, target.transform.position);
+            Health -= TorpDam;
+            Destroy(other.gameObject);
+        }
 
-            if (distance <= detectionDistance)
-            {
-                Health--;
-            }
+        if (other.CompareTag(BulletTag))
+        {
+            Health -= BulletDam;
+            Destroy(other.gameObject);
         }
     }
 }

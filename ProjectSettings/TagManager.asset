@@ -5,7 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - TorpedoAlly
-  - TorpedoMain
+  - EnemyShip
+  - BulletAlly
+  - TorpedoEnemy
+  - BulletEnemy
   layers:
   - Default
   - TransparentFX
