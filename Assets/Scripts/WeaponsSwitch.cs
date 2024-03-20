@@ -14,10 +14,10 @@ public class WeaponsSwitch : MonoBehaviour
     public float SearchAmount, WaitTimeSearch;
     public float TorpAmount, TorpReloadTime;
     public float ShotAmount, ShotReloadTime;
-    public float ShotReloadShot, ReloadVariance;
+    public float ShotReloadShot, ReloadVariance, BattleReload;
 
     private bool NoMultipleLights, NoMultipleTorps, NoMultipleShots;
-    private bool InBattle;
+    private bool InBattle, BattleReloadOnce;
     private static int lastSelectedTorpedoLauncherIndex = -1;
     private static int lastSelectedTurretIndex = -1;
     void Start()
@@ -34,6 +34,7 @@ public class WeaponsSwitch : MonoBehaviour
         NoMultipleTorps = true;
         NoMultipleShots = true;
         InBattle = false;
+        BattleReloadOnce = true;
     }
 
     // Update is called once per frame
@@ -74,6 +75,16 @@ public class WeaponsSwitch : MonoBehaviour
         SearchText.text = "You have " + SearchAmount.ToString() + " Search Light(s) Left";
         TorpedoText.text = "You have " + TorpAmount.ToString() + " Torpedo(s) Left";
         ShellText.text = "You have " + ShotAmount.ToString() + " Shell(s) Left";
+
+        if(!BattleReloadOnce)
+        {
+            InBattle = true;
+        }
+
+        else if (BattleReloadOnce)
+        {
+            InBattle = false;
+        }
     }
 //BUNCH OF SEARCHLIGHT STUFF
     public void TurnOnSearchers()
@@ -148,12 +159,19 @@ public class WeaponsSwitch : MonoBehaviour
 //BattleStuff
     public void YesBattle()
     {
-        InBattle = true;
+        if(BattleReloadOnce)
+        {
+            BattleReloadOnce = false;
+            InBattle = true;
+            StartCoroutine(GetReloadBack());
+        }
     }
 
-    public void NoBattle()
+    IEnumerator GetReloadBack()
     {
+        yield return new WaitForSeconds(BattleReload);
         InBattle = false;
+        BattleReloadOnce = true;
     }
 
 }
