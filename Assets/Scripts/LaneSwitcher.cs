@@ -5,62 +5,75 @@ using UnityEngine.UI;
 
 public class LaneSwitcher : MonoBehaviour
 {
+    public Text SameLane;
     public float TurnAngle;
     public float TurnPoints;
-    private bool CanTurn;
+    private bool CanTurn, IsRight;
     public float UpdateTimeStatic;
     public float UpdateTime = 3f;
+    private float CurrentLane = 3f;
+    public float DesiredLane, LaneWait, DesiredLaneLX, Tolerance;
 
     void Start()
     {
         //PLACEHOLDER
         CanTurn = true;
         TurnPoints = 1f;
+        SameLane.enabled = false;
     }
 
     void Update()
     {
         TurnList();
-        UpdateTime -= Time.deltaTime;
-        if(UpdateTime < 0)
+        if(TurnPoints < 1)
         {
-            UpdateTime = UpdateTimeStatic;
-            IncreaseTurn();
+            UpdateTime -= Time.deltaTime;
+            if(UpdateTime < 0)
+            {
+                UpdateTime = UpdateTimeStatic;
+                IncreaseTurn();
+            }
         }
 
         MoveList();
     }
 
+//-30, -10, 0, 10, 30
     void MoveList()
     {
         if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Alpha1) && CanTurn)
         {
-            transform.position = new Vector3(-30f, transform.position.y, transform.position.z);
-            DecreaseTurn();
+            DesiredLane = 1f;
+            DesiredLaneLX = -30f;
+            TurnRotate(DesiredLane, DesiredLaneLX);
         }
 
         if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Alpha2) && CanTurn)
         {
-            transform.position = new Vector3(-10f, transform.position.y, transform.position.z);
-            DecreaseTurn();
+            DesiredLane = 2f;
+            DesiredLaneLX = -10f;
+            TurnRotate(DesiredLane, DesiredLaneLX);
         }
 
         if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W) && CanTurn)
         {
-            transform.position = new Vector3(0, transform.position.y, transform.position.z);
-            DecreaseTurn();
+            DesiredLane = 3f;
+            DesiredLaneLX = 0f;
+            TurnRotate(DesiredLane, DesiredLaneLX);
         }
 
         if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Alpha3) && CanTurn)
         {
-            transform.position = new Vector3(10f, transform.position.y, transform.position.z);
-            DecreaseTurn();
+            DesiredLane = 4f;
+            DesiredLaneLX = 10f;
+            TurnRotate(DesiredLane, DesiredLaneLX);
         }
 
         if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Alpha4) && CanTurn)
         {
-            transform.position = new Vector3(30f, transform.position.y, transform.position.z);
-            DecreaseTurn();
+            DesiredLane = 5f;
+            DesiredLaneLX = 30f;
+            TurnRotate(DesiredLane, DesiredLaneLX);
         }
     }
 
@@ -75,6 +88,48 @@ public class LaneSwitcher : MonoBehaviour
         {
             CanTurn = false;
         }
+    }
+
+    void TurnRotate(float DesiredLane, float NeededX)
+    {
+        if(CurrentLane > DesiredLane)
+        {
+            DecreaseTurn();
+            IsRight = false;
+            //StartCoroutine(Turn(NeededX, IsRight));
+            CurrentLane = DesiredLane;
+        }
+
+        else if(CurrentLane < DesiredLane)
+        {
+            DecreaseTurn();
+            CurrentLane = DesiredLane;
+        }
+
+        else if(CurrentLane == DesiredLane)
+        {
+            StartCoroutine(SameLaneOhNo());
+        }
+
+        else
+        {
+            Debug.LogError("What Have You Done For This To Go So Wrong");
+        }
+    }
+
+    //IEnumerator Turn(float NeededX, bool IsRight)
+    //{
+    //    while((Mathf.Abs(transform.position.x - NeededX) > Tolerance))
+    //    {
+    //        Debug.Log("Sup");
+    //    }
+    //}
+
+    IEnumerator SameLaneOhNo()
+    {
+        SameLane.enabled = true;
+        yield return new WaitForSeconds(LaneWait);
+        SameLane.enabled = false;
     }
 
     public void IncreaseTurn()

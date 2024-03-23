@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class MoveAndRotateAI : MonoBehaviour
 {
-    public Transform Player;
     private bool CanGo, CanGoOnce, GoTillEnd;
     public bool IsNonCrossingShip;
     public float speed;
-    public float NeededDistanceShip;
     public float TurnTime;
     public float Endtime;
     public float rotationTolerance;
