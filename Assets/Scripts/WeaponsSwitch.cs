@@ -15,7 +15,7 @@ public class WeaponsSwitch : MonoBehaviour
     public float TorpAmount, TorpReloadTime;
     public float ShotAmount, ShotReloadTime;
     public float ShotReloadShot, ReloadVariance, BattleReload;
-
+    private float Search4 = 0f;
     private bool NoMultipleLights, NoMultipleTorps, NoMultipleShots;
     private bool InBattle, BattleReloadOnce;
     private static int lastSelectedTorpedoLauncherIndex = -1;
@@ -106,10 +106,15 @@ public class WeaponsSwitch : MonoBehaviour
     {
         float OSearchAmountReload = Random.Range(SearchAmountReload - ReloadVariance, SearchAmountReload + ReloadVariance);
         yield return new WaitForSeconds(OSearchAmountReload);
-        if(!InBattle)
+        if(!InBattle && TorpAmount < 10f)
         {    
-            SearchAmount++;
+            if(Search4 == 4f && SearchAmount < 3f)
+            {
+                SearchAmount++;
+                Search4 = 0f;
+            }
             TorpAmount++;
+            Search4++;
         }
         StartCoroutine(ReloadSearchersAndTorps());
     }
@@ -150,7 +155,7 @@ public class WeaponsSwitch : MonoBehaviour
     IEnumerator MoreShots()
     {
         yield return new WaitForSeconds(ShotReloadShot);
-        if(!InBattle)
+        if(!InBattle && ShotAmount < 50f)
         {
             ShotAmount++;
         }

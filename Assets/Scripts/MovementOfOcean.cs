@@ -21,7 +21,7 @@ public class MovementOfOcean : MonoBehaviour
     public void ToEnd()
     {
         ShouldRun = false;
-    }
+    }       
 
     void Update()
     {

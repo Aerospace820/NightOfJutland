@@ -7,23 +7,17 @@ public class TriggerEnter : MonoBehaviour
 {
     public UnityEvent ShipGo;
     public Transform Player;
-    private bool ShipGoOnce;
-    public float DistanceNeededShip;
-    // Start is called before the first frame update
-
+    public float MaxZ, MinZ;
     void Start()
     {
-        ShipGoOnce = true;
+        float ZPosition = Random.Range(MinZ, MaxZ); 
+        Vector3 newPosition = transform.position;
+        newPosition.z = ZPosition;
+        transform.position = newPosition;
     }
-    void Update()
+    void OnTriggerEnter()
     {
-        float PlayerPos = Vector3.Distance(Player.transform.position, transform.position);
-
-        if(PlayerPos < DistanceNeededShip && ShipGoOnce)
-        {
-            ShipGoOnce = false;
-            ShipGo.Invoke();
-            Debug.Log("Sup Trigger got Entered fr fr");   
-        }
+        ShipGo.Invoke();
+        Debug.Log("Sup Trigger got Entered fr fr");
     }
 }

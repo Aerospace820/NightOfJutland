@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 
 public class LaneSwitcher : MonoBehaviour
 {
-    public Text SameLane;
-    public float TurnAngle;
+    public TextMeshProUGUI SameLane;
     public float TurnPoints;
     private bool CanTurn, IsRight;
     public float UpdateTimeStatic;
     public float UpdateTime = 3f;
     private float CurrentLane = 3f;
-    public float DesiredLane, LaneWait, DesiredLaneLX, Tolerance;
+    public float DesiredLane, LaneWait, DesiredLaneLX;
+    public float Tolerance, YAngle, speedTurned, xStuff;
 
     void Start()
     {
@@ -41,39 +42,44 @@ public class LaneSwitcher : MonoBehaviour
 //-30, -10, 0, 10, 30
     void MoveList()
     {
-        if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Alpha1) && CanTurn)
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            DesiredLane = 1f;
-            DesiredLaneLX = -30f;
-            TurnRotate(DesiredLane, DesiredLaneLX);
-        }
+            if (Input.GetKeyDown(KeyCode.Alpha1) && CanTurn)
+            {
+                DesiredLane = 1f;
+                DesiredLaneLX = -30f;
+                TurnRotate(DesiredLane, DesiredLaneLX);
+            }
 
-        if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Alpha2) && CanTurn)
-        {
-            DesiredLane = 2f;
-            DesiredLaneLX = -10f;
-            TurnRotate(DesiredLane, DesiredLaneLX);
-        }
+            if (Input.GetKeyDown(KeyCode.Alpha2) && CanTurn)
+            {
+                DesiredLane = 2f;
+                DesiredLaneLX = -10f;
+                TurnRotate(DesiredLane, DesiredLaneLX);
+            }
 
-        if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W) && CanTurn)
-        {
-            DesiredLane = 3f;
-            DesiredLaneLX = 0f;
-            TurnRotate(DesiredLane, DesiredLaneLX);
-        }
+            if (Input.GetKeyDown(KeyCode.W) && CanTurn)
+            {
+                DesiredLane = 3f;
+                DesiredLaneLX = 0f;
+                TurnRotate(DesiredLane, DesiredLaneLX);
+            }
 
-        if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Alpha3) && CanTurn)
-        {
-            DesiredLane = 4f;
-            DesiredLaneLX = 10f;
-            TurnRotate(DesiredLane, DesiredLaneLX);
-        }
+            if (Input.GetKeyDown(KeyCode.Alpha2) && CanTurn)
+            {
+                DesiredLane = 4f;
+                DesiredLaneLX = 10f;
+                TurnRotate(DesiredLane, DesiredLaneLX);
+                Debug.Log("DoesDetect");
+            }
 
-        if(Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Alpha4) && CanTurn)
-        {
-            DesiredLane = 5f;
-            DesiredLaneLX = 30f;
-            TurnRotate(DesiredLane, DesiredLaneLX);
+            if (Input.GetKeyDown(KeyCode.Alpha3) && CanTurn)
+            {
+                DesiredLane = 5f;
+                DesiredLaneLX = 30f;
+                TurnRotate(DesiredLane, DesiredLaneLX);
+                Debug.Log("DoesDetect");
+            }
         }
     }
 
@@ -96,14 +102,15 @@ public class LaneSwitcher : MonoBehaviour
         {
             DecreaseTurn();
             IsRight = false;
-            //StartCoroutine(Turn(NeededX, IsRight));
-            CurrentLane = DesiredLane;
+            StartCoroutine(Turn(NeededX, IsRight));
         }
 
         else if(CurrentLane < DesiredLane)
         {
             DecreaseTurn();
-            CurrentLane = DesiredLane;
+            IsRight = true;
+            StartCoroutine(Turn(NeededX, IsRight));
+            Debug.Log("Yes Detect");
         }
 
         else if(CurrentLane == DesiredLane)
@@ -117,13 +124,34 @@ public class LaneSwitcher : MonoBehaviour
         }
     }
 
-    //IEnumerator Turn(float NeededX, bool IsRight)
-    //{
-    //    while((Mathf.Abs(transform.position.x - NeededX) > Tolerance))
-    //    {
-    //        Debug.Log("Sup");
-    //    }
-    //}
+    IEnumerator Turn(float NeededX, bool IsRight)
+    {
+        Debug.Log(IsRight);
+        Quaternion targetRotation;
+        if (IsRight)
+        {
+            targetRotation = Quaternion.Euler(0f, -YAngle, 0f);
+            while (transform.position.x < NeededX)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime);
+                transform.position += new Vector3(xStuff * Time.deltaTime, 0f, 0f);
+                yield return null;
+            }
+        }
+        else
+        {
+            targetRotation = Quaternion.Euler(0f, YAngle, 0f);
+            while (transform.position.x > NeededX)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime);
+                transform.position -= new Vector3(xStuff * Time.deltaTime, 0f, 0f);
+                yield return null;
+            }
+        }
+        Quaternion AftertargetRotation = Quaternion.identity;
+        transform.rotation = Quaternion.Slerp(transform.rotation, AftertargetRotation, Time.deltaTime);
+        CurrentLane = DesiredLane;
+    }
 
     IEnumerator SameLaneOhNo()
     {

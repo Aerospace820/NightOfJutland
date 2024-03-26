@@ -7,6 +7,7 @@ public class FleetChooser : MonoBehaviour
 {
     public GameObject[] Fleets;
     public UnityEvent[] FleetEvents;
+    public GameObject Player;
     public void TriggerEnter()
     {
         if (Fleets != null && Fleets.Length > 0 && FleetEvents != null && FleetEvents.Length > 0)
@@ -14,11 +15,21 @@ public class FleetChooser : MonoBehaviour
             ShuffleArray(Fleets, FleetEvents);
 
             int index = Random.Range(0, Fleets.Length);
-            Fleets[index].SetActive(true);
+            GameObject selectedFleet = Fleets[index];
+            selectedFleet.SetActive(true);
 
             if (index < FleetEvents.Length)
             {
                 FleetEvents[index].Invoke();
+            }
+            
+            if (Player != null)
+            {
+                selectedFleet.transform.SetParent(Player.transform);
+            }
+            else
+            {
+                Debug.LogWarning("Player GameObject is not assigned!");
             }
         }
         else

@@ -9,13 +9,15 @@ public class EnemysTorpDemise : MonoBehaviour
 {
     public UnityEvent NoReloadWompWomp;
     public UnityEvent MouseEnd;
+    public UnityEvent CamShake;
     public HealthMouse HealthEvent;
     public string UIHealthState;
-    public string TorpTag, BulletTag;
+    public string TorpTag, BulletTag, ShipTag;
     public float TorpDam, BulletDam, RqXPos;
     public float Health = 100f;
     public bool IsEnemy;
     private bool IsMouse = false;
+    public float detectionRadius;
 
     void OnTriggerEnter(Collider other)
     {
@@ -38,6 +40,45 @@ public class EnemysTorpDemise : MonoBehaviour
             if(IsMouse)
             {
                 HealthEvent.Invoke(Health, UIHealthState);
+            }
+            if(!IsEnemy)
+            {
+                float RandomShakeChance = Random.Range(0,6);
+                Debug.Log(RandomShakeChance);
+                if(RandomShakeChance == 5f)
+                {
+                    CamShake.Invoke();
+                }
+            }   
+        }
+    }
+
+    void Update()
+    {
+        if(!IsEnemy)
+        {
+            HealthEvent.Invoke(Health, UIHealthState);
+        }
+
+        if(IsEnemy)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.CompareTag(ShipTag) && Vector3.Distance(hit.collider.transform.position, transform.position) <= detectionRadius)
+                {
+                    if(transform.position.x > RqXPos)
+                    {
+                        if(IsEnemy)
+                        {
+                            Debug.Log("MouseIsOver2");
+                            HealthEvent.Invoke(Health, UIHealthState);
+                            IsMouse = true;
+                        }
+                    }
+                }
             }
         }
     }
