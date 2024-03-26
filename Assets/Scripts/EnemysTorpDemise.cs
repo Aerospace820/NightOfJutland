@@ -5,18 +5,24 @@ using UnityEngine.Events;
 
 [System.Serializable]
 public class HealthMouse : UnityEvent<float, string> { } 
+[System.Serializable]
+public class ScoreStuff : UnityEvent<float> { }
 public class EnemysTorpDemise : MonoBehaviour
 {
     public UnityEvent NoReloadWompWomp;
     public UnityEvent MouseEnd;
     public UnityEvent CamShake;
     public HealthMouse HealthEvent;
+    public ScoreStuff scoreChange;
+    public Transform FullShip;
     public string UIHealthState;
     public string TorpTag, BulletTag, ShipTag;
-    public float TorpDam, BulletDam, RqXPos;
+    public float TorpDam, BulletDam, RqXPos, EnemyScoreChangeShot, EnemyScoreChangeDeath;
+    public float SpeedDown, YAxisNeeded;
     public float Health = 100f;
     public bool IsEnemy;
     private bool IsMouse = false;
+    private bool OnlyOncecanThyDie = true;
     public float detectionRadius;
 
     void OnTriggerEnter(Collider other)
@@ -30,6 +36,10 @@ public class EnemysTorpDemise : MonoBehaviour
             {
                 HealthEvent.Invoke(Health, UIHealthState);
             }
+            if(IsEnemy)
+            {
+                scoreChange.Invoke(EnemyScoreChangeShot);
+            }
         }
 
         if (other.CompareTag(BulletTag))
@@ -40,6 +50,10 @@ public class EnemysTorpDemise : MonoBehaviour
             if(IsMouse)
             {
                 HealthEvent.Invoke(Health, UIHealthState);
+            }
+            if(IsEnemy)
+            {
+                scoreChange.Invoke(EnemyScoreChangeShot);
             }
             if(!IsEnemy)
             {
@@ -80,6 +94,25 @@ public class EnemysTorpDemise : MonoBehaviour
                     }
                 }
             }
+        }
+
+        if(Health < 0f && OnlyOncecanThyDie)
+        {
+            OnlyOncecanThyDie = false;
+            StartCoroutine(UnderWaves());
+            if(IsEnemy)
+            {
+                scoreChange.Invoke(EnemyScoreChangeDeath);
+            }
+        }
+    }
+
+    IEnumerator UnderWaves()
+    {
+        while (transform.position.y > YAxisNeeded)
+        {
+            FullShip.Translate(Vector3.down * SpeedDown * Time.deltaTime);
+            yield return null;
         }
     }
 

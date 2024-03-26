@@ -944,6 +944,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11f8ed4ff0967964da07bcd86eaf9de3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShotSpeed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3972532939430534557, guid: ef9abffe689426c4fb01659591dedf5a, type: 3}
+        m_TargetAssemblyTypeName: TorpSpeeding, Assembly-CSharp
+        m_MethodName: SpeedImprovment
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  TorpSpeed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3349585738223980509, guid: dd39fabfd301bac4897d924f2862e803, type: 3}
+        m_TargetAssemblyTypeName: TorpSpeeding, Assembly-CSharp
+        m_MethodName: SpeedImprovment
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   SearchText: {fileID: 559847602}
   TorpedoText: {fileID: 1131604194}
   ShellText: {fileID: 156852179}
@@ -962,6 +992,7 @@ MonoBehaviour:
   SearchAmountReload: 4
   SearchAmount: 1
   WaitTimeSearch: 0.1
+  SearchReloadTorp: 0
   TorpAmount: 5
   TorpReloadTime: 2
   ShotAmount: 10
@@ -969,6 +1000,19 @@ MonoBehaviour:
   ShotReloadShot: 2
   ReloadVariance: 1
   BattleReload: 15
+  MaxSearch: 1
+  MaxShots: 50
+  MaxTorp: 10
+  MaxTorpImprov: 0
+  SearchAmountReloadImprov: 0
+  TorpReloadTimeImprov: 0
+  MaxShotsImprov: 0
+  ShotReloadShotImprov: 0
+  ShotReloadTimeImprov: 0
+  MaxSearchImprov: 0
+  SearchReloadTorpImprov: 0
+  SearchReloadImprov: 0
+  WaitTimeSearchImprov: 0
 --- !u!1 &275414471
 GameObject:
   m_ObjectHideFlags: 0
@@ -1579,7 +1623,7 @@ GameObject:
   - component: {fileID: 452239034}
   - component: {fileID: 452239033}
   m_Layer: 0
-  m_Name: Button (1)
+  m_Name: Search
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1648,7 +1692,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 452239034}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1559941651}
+        m_TargetAssemblyTypeName: Score, Assembly-CSharp
+        m_MethodName: DecreaseScore
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 2
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &452239034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2288,13 +2344,33 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  scoreChange:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1559941651}
+        m_TargetAssemblyTypeName: Score, Assembly-CSharp
+        m_MethodName: IncreaseScore
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  FullShip: {fileID: 1613169818}
   UIHealthState: 'German V-25 Flt1, Shp1, HEALTH:'
   TorpTag: TorpedoAlly
   BulletTag: BulletAlly
   ShipTag: EnemyShip
   TorpDam: 1
-  BulletDam: 2
+  BulletDam: 10
   RqXPos: -40
+  EnemyScoreChangeShot: 100
+  EnemyScoreChangeDeath: 500
+  SpeedDown: 0.5
+  YAxisNeeded: -40
   Health: 100
   IsEnemy: 1
   detectionRadius: 40
@@ -2350,6 +2426,81 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1603662298}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &674146917
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 674146918}
+  - component: {fileID: 674146920}
+  - component: {fileID: 674146919}
+  m_Layer: 0
+  m_Name: WompWomp (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &674146918
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 674146917}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 826391755}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &674146919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 674146917}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &674146920
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 674146917}
+  m_CullTransparentMesh: 1
 --- !u!1 &698496410
 GameObject:
   m_ObjectHideFlags: 0
@@ -2813,6 +2964,66 @@ MonoBehaviour:
   Torpedo: {fileID: 4892111801569581238, guid: 40558acaaf1e95b449278c50f8fe2626, type: 3}
   XPos: -15
   IsDestroyer: 1
+--- !u!1 &826391754
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 826391755}
+  - component: {fileID: 826391756}
+  m_Layer: 0
+  m_Name: WompWomp (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &826391755
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 826391754}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 674146918}
+  m_Father: {fileID: 1683139454}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &826391756
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 826391754}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &856905620
 GameObject:
   m_ObjectHideFlags: 0
@@ -3880,16 +4091,24 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  scoreChange:
+    m_PersistentCalls:
+      m_Calls: []
+  FullShip: {fileID: 269142487}
   UIHealthState: Acasta Health
   TorpTag: TorpedoEnemy
   BulletTag: BulletEnemy
-  ShipTag: 
+  ShipTag: WompWompNotEnemy
   TorpDam: 1
   BulletDam: 2
-  RqXPos: 0
+  RqXPos: 0.10101
+  EnemyScoreChangeShot: 0.10101
+  EnemyScoreChangeDeath: 0.10101
+  SpeedDown: 2
+  YAxisNeeded: -40
   Health: 100
   IsEnemy: 0
-  detectionRadius: 0
+  detectionRadius: 0.10101
 --- !u!1 &1004568225
 GameObject:
   m_ObjectHideFlags: 0
@@ -8916,7 +9135,7 @@ GameObject:
   - component: {fileID: 1089141514}
   - component: {fileID: 1089141513}
   m_Layer: 0
-  m_Name: Button (2)
+  m_Name: Shell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8985,7 +9204,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1089141514}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1559941651}
+        m_TargetAssemblyTypeName: Score, Assembly-CSharp
+        m_MethodName: DecreaseScore
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 3
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1089141514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15016,9 +15247,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e2c0d4445133044aee4b1f22b2e8e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WinCanvas: {fileID: 0}
-  scoretext: {fileID: 0}
+  PlayerStuff:
+    m_PersistentCalls:
+      m_Calls: []
+  WinCanvas: {fileID: 826391756}
+  scoretext: {fileID: 1559941652}
+  NoScoreWompWomp: {fileID: 0}
   GameScore: 0
+  WompWompDissaperaTime: 5
 --- !u!114 &1559941652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15266,7 +15502,7 @@ Transform:
   m_GameObject: {fileID: 1613169817}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.9852557, z: -0, w: 0.17108847}
-  m_LocalPosition: {x: -45.64562, y: 29.580002, z: -30.82}
+  m_LocalPosition: {x: -45.64562, y: 30, z: -30.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -15504,7 +15740,7 @@ GameObject:
   - component: {fileID: 1678230088}
   - component: {fileID: 1678230087}
   m_Layer: 0
-  m_Name: Button
+  m_Name: Torp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15573,7 +15809,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1678230088}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1559941651}
+        m_TargetAssemblyTypeName: Score, Assembly-CSharp
+        m_MethodName: DecreaseScore
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 1
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1678230088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15640,7 +15888,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 826391755}
   m_Father: {fileID: 1740700960}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1740700959

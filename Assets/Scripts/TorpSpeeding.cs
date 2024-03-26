@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TorpSpeeding : MonoBehaviour
 {
-    public float speed = 5f;
+    public float speed = 5f, SpeedImprovX;
     void OnBecameInvisible()
     {
         Object.Destroy(gameObject);
@@ -13,5 +13,10 @@ public class TorpSpeeding : MonoBehaviour
     void Update()
     {
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
+    }
+
+    public void SpeedImprovment()
+    {
+        speed += SpeedImprovX;
     }
 }

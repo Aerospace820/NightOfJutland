@@ -2,19 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
 public class WeaponsSwitch : MonoBehaviour
 {
+    public UnityEvent ShotSpeed, TorpSpeed;
     public TMP_Text SearchText, TorpedoText, ShellText;
     public Transform TorpedoLauncher1, TorpedoLauncher2, GunEnd1, GunEnd2;
     public GameObject Torpedo, Bullet;
     public Light SearchLight1, SearchLight2;
     public Light Ship1, Ship2, Ship3;
     public float SearchReload, SearchAmountReload;
-    public float SearchAmount, WaitTimeSearch;
+    public float SearchAmount, WaitTimeSearch, SearchReloadTorp;
     public float TorpAmount, TorpReloadTime;
     public float ShotAmount, ShotReloadTime;
     public float ShotReloadShot, ReloadVariance, BattleReload;
+    public float MaxSearch = 1f, MaxShots = 50f, MaxTorp = 10f;
+//Torpedo
+    public float MaxTorpImprov, SearchAmountReloadImprov, TorpReloadTimeImprov;
+//Shot
+    public float MaxShotsImprov, ShotReloadShotImprov, ShotReloadTimeImprov;
+//SearchLights
+    public float MaxSearchImprov, SearchReloadTorpImprov, SearchReloadImprov, WaitTimeSearchImprov;
     private float Search4 = 0f;
     private bool NoMultipleLights, NoMultipleTorps, NoMultipleShots;
     private bool InBattle, BattleReloadOnce;
@@ -106,9 +115,9 @@ public class WeaponsSwitch : MonoBehaviour
     {
         float OSearchAmountReload = Random.Range(SearchAmountReload - ReloadVariance, SearchAmountReload + ReloadVariance);
         yield return new WaitForSeconds(OSearchAmountReload);
-        if(!InBattle && TorpAmount < 10f)
+        if(!InBattle && TorpAmount < MaxTorp)
         {    
-            if(Search4 == 4f && SearchAmount < 3f)
+            if(Search4 == SearchReloadTorp && SearchAmount < MaxSearch)
             {
                 SearchAmount++;
                 Search4 = 0f;
@@ -155,7 +164,7 @@ public class WeaponsSwitch : MonoBehaviour
     IEnumerator MoreShots()
     {
         yield return new WaitForSeconds(ShotReloadShot);
-        if(!InBattle && ShotAmount < 50f)
+        if(!InBattle && ShotAmount < MaxShots)
         {
             ShotAmount++;
         }
@@ -177,6 +186,26 @@ public class WeaponsSwitch : MonoBehaviour
         yield return new WaitForSeconds(BattleReload);
         InBattle = false;
         BattleReloadOnce = true;
+    }
+//RAMDOM SCORE STUFF
+    public void Improvment(float Improve)
+    {
+        if(Improve == 1)
+        {
+            float TorpImprove = Random.Range(0,4);
+            if(TorpImprove == 1)
+            {
+                
+            }
+            if(TorpImprove == 2)
+            {
+                MaxTorp += MaxTorpImprov;
+            }
+            if(TorpImprove == 3)
+            {
+                TorpSpeed.Invoke();
+            }                     
+        }
     }
 
 }
