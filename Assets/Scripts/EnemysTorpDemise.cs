@@ -9,6 +9,7 @@ public class HealthMouse : UnityEvent<float, string> { }
 public class ScoreStuff : UnityEvent<float> { }
 public class EnemysTorpDemise : MonoBehaviour
 {
+    public ParticleSystem Explosion1, Explosion2, Explosion3, Explosion4;
     public UnityEvent NoReloadWompWomp;
     public UnityEvent MouseEnd;
     public UnityEvent CamShake;
@@ -21,9 +22,16 @@ public class EnemysTorpDemise : MonoBehaviour
     public float SpeedDown, YAxisNeeded;
     public float Health = 100f;
     public bool IsEnemy;
-    private bool IsMouse = false;
+    private bool IsMouse = false, O = true, Tw = true, Th = true, F = true;
     private bool OnlyOncecanThyDie = true;
     public float detectionRadius;
+    void Start()
+    {
+        Explosion1.Stop();
+        Explosion2.Stop();
+        Explosion3.Stop();
+        Explosion4.Stop();
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -45,6 +53,7 @@ public class EnemysTorpDemise : MonoBehaviour
         if (other.CompareTag(BulletTag))
         {
             Health -= BulletDam;
+            Debug.Log(other);
             Destroy(other.gameObject);
             NoReloadWompWomp.Invoke();
             if(IsMouse)
@@ -72,6 +81,34 @@ public class EnemysTorpDemise : MonoBehaviour
         if(!IsEnemy)
         {
             HealthEvent.Invoke(Health, UIHealthState);
+            if(Health < 76f && O)
+            {
+                O = false;
+                Explosion1.Play();
+                Debug.Log("Somethinghappened1");
+                CamShake.Invoke();
+            }
+            if(Health < 50f && Tw)
+            {
+                Tw = false;
+                Explosion2.Play();
+                Debug.Log("Somethinghappened2");
+                CamShake.Invoke();
+            }
+            if(Health < 25f && Th)
+            {
+                Th = false;
+                Explosion3.Play();
+                Debug.Log("Somethinghappened3");
+                CamShake.Invoke();
+            }
+            if(Health < 1f && F)
+            {
+                F = false;
+                Explosion4.Play();
+                Debug.Log("Somethinghappened4");
+                CamShake.Invoke();
+            }
         }
 
         if(IsEnemy)

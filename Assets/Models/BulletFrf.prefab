@@ -155,3 +155,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 40
   SpeedImprovX: 5
+  DeleteTime: 8

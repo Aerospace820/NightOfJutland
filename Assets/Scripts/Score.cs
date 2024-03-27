@@ -14,7 +14,7 @@ public class Score : MonoBehaviour
     public Image NoScoreWompWomp;
     public float GameScore = 0;
     public float WompWompDissaperaTime;
-    float DecreaserShell, DecreaserTorp, DecreaserSearch;
+    public float DecreaserShell, DecreaserTorp, DecreaserSearch;
     
     public void IncreaseScore(float Increaser)
     {

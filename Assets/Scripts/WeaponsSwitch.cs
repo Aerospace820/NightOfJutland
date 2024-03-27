@@ -20,11 +20,14 @@ public class WeaponsSwitch : MonoBehaviour
     public float MaxSearch = 1f, MaxShots = 50f, MaxTorp = 10f;
 //Torpedo
     public float MaxTorpImprov, SearchAmountReloadImprov, TorpReloadTimeImprov;
+    public float SearchAmountReloadLimit, TorpReloadTimeLimit;
 //Shot
     public float MaxShotsImprov, ShotReloadShotImprov, ShotReloadTimeImprov;
+    public float ShotReloadShotLimit, ShotReloadTimeLimit;
 //SearchLights
     public float MaxSearchImprov, SearchReloadTorpImprov, SearchReloadImprov, WaitTimeSearchImprov;
-    private float Search4 = 0f;
+    public float SearchReloadTorpLimit, WaitTimeSearchLimit;
+    private float Search4 = 0f, MouseNumber = 1f;
     private bool NoMultipleLights, NoMultipleTorps, NoMultipleShots;
     private bool InBattle, BattleReloadOnce;
     private static int lastSelectedTorpedoLauncherIndex = -1;
@@ -46,17 +49,65 @@ public class WeaponsSwitch : MonoBehaviour
         BattleReloadOnce = true;
     }
 
+    void OnMouseDown()
+    {
+        if(MouseNumber == 1f)
+        {
+            if(NoMultipleShots && ShotAmount > 0f)
+            {
+                NoMultipleShots = false;
+                StartCoroutine(ShotReloads());
+
+                int nextTurretIndex = (lastSelectedTurretIndex + 1) % 2;
+
+                Transform GunShoot = nextTurretIndex == 0 ? GunEnd1 : GunEnd2;
+                Instantiate(Bullet, GunShoot.position, GunShoot.rotation);
+
+                lastSelectedTurretIndex = nextTurretIndex;
+            }
+        }
+
+        if(MouseNumber == 2f)
+        {
+            if(NoMultipleTorps && TorpAmount > 0f)
+            {
+                NoMultipleTorps = false;
+                StartCoroutine(TorpReloads());
+
+                int nextTorpedoLauncherIndex = (lastSelectedTorpedoLauncherIndex + 1) % 2;
+
+                Transform TorpedoLaunch = nextTorpedoLauncherIndex == 0 ? TorpedoLauncher1 : TorpedoLauncher2;
+                Instantiate(Torpedo, TorpedoLaunch.position, TorpedoLaunch.rotation);
+
+                lastSelectedTorpedoLauncherIndex = nextTorpedoLauncherIndex;
+            }
+        }
+
+        if(MouseNumber == 3f)
+        {
+            if(NoMultipleLights && SearchAmount > 0f)
+            {
+                TurnOnSearchers();
+                NoMultipleLights = false;
+            }
+        }
+    }
+
+
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.U) && NoMultipleLights && SearchAmount > 0f)
+        Debug.Log("Fix Torpedo Rn");
+        if(Input.GetKeyDown(KeyCode.C) && NoMultipleLights && SearchAmount > 0f)
         {
+            MouseNumber = 3f;
             TurnOnSearchers();
             NoMultipleLights = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.Y) && NoMultipleTorps && TorpAmount > 0f)
+        if (Input.GetKeyDown(KeyCode.X) && NoMultipleTorps && TorpAmount > 0f)
         {
+            MouseNumber = 2f;
             NoMultipleTorps = false;
             StartCoroutine(TorpReloads());
 
@@ -70,6 +121,7 @@ public class WeaponsSwitch : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Z) && NoMultipleShots && ShotAmount > 0f)
         {
+            MouseNumber = 1f;
             NoMultipleShots = false;
             StartCoroutine(ShotReloads());
 
@@ -192,19 +244,78 @@ public class WeaponsSwitch : MonoBehaviour
     {
         if(Improve == 1)
         {
-            float TorpImprove = Random.Range(0,4);
-            if(TorpImprove == 1)
-            {
-                
-            }
-            if(TorpImprove == 2)
-            {
-                MaxTorp += MaxTorpImprov;
-            }
-            if(TorpImprove == 3)
-            {
-                TorpSpeed.Invoke();
-            }                     
+            TorpedoStuff();                     
+        }
+        else if(Improve == 2)
+        {
+            SearchStuff();                   
+        }
+        else if(Improve == 3)
+        {
+            ShotStuff();                    
+        }
+    }
+    
+    void TorpedoStuff()
+    {
+        float TorpImprove = Random.Range(1,5);
+        if(TorpImprove == 1)
+        {
+            MaxTorp += MaxTorpImprov;
+        }
+        if(TorpImprove == 2 && SearchAmountReload > SearchAmountReloadLimit)
+        {
+            SearchAmountReload -= SearchAmountReloadImprov;
+        }
+        if(TorpImprove == 3 && TorpReloadTime > TorpReloadTimeLimit)
+        {
+            TorpReloadTime -= TorpReloadTimeImprov;
+        }
+        if(TorpImprove == 4)
+        {
+            TorpSpeed.Invoke();
+        }
+    }
+
+    void SearchStuff()
+    {
+        float SearchImprove = Random.Range(1,5);
+        if(SearchImprove == 1)
+        {
+            MaxSearch += MaxSearchImprov;
+        }
+        if(SearchImprove == 2 && SearchReloadTorp > SearchReloadTorpLimit)
+        {
+            SearchReloadTorp -= SearchReloadTorpImprov;
+        }
+        if(SearchImprove == 3 && TorpReloadTime > TorpReloadTimeLimit)
+        {
+            SearchReload += SearchReloadImprov;
+        }
+        if(SearchImprove == 4 && WaitTimeSearch > WaitTimeSearchLimit)
+        {
+            WaitTimeSearch -= WaitTimeSearchImprov;
+        }
+    }
+
+    void ShotStuff()
+    {
+        float ShotImprove = Random.Range(1,5);
+        if(ShotImprove == 1)
+        {
+            MaxShots += MaxShotsImprov;
+        }
+        if(ShotImprove == 2 && ShotReloadShot > ShotReloadShotLimit)
+        {
+            ShotReloadShot -= ShotReloadShotImprov;
+        }
+        if(ShotImprove == 3 && ShotReloadTime > ShotReloadTimeLimit)
+        {
+            ShotReloadTime -= ShotReloadTimeImprov;
+        }
+        if(ShotImprove == 4)
+        {
+            ShotSpeed.Invoke();
         }
     }
 
