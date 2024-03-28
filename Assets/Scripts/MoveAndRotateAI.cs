@@ -5,12 +5,11 @@ using UnityEngine;
 public class MoveAndRotateAI : MonoBehaviour
 {
     public Transform player;
-    private bool CanGo, CanGoOnce;
+    private bool CanGo;
     public float speed, distanceThreshold;
     void Awake()
     {
         CanGo = false;
-        CanGoOnce = true;
     }
 
     public void LetsGo()
@@ -23,22 +22,12 @@ public class MoveAndRotateAI : MonoBehaviour
     {
         if (CanGo)
         {
-            Debug.Log(CanGoOnce);
-            if(CanGoOnce)
+            if(Mathf.Abs(transform.position.x - player.position.x) < distanceThreshold)
             {
-                StartCoroutine(EndStuff());
-                CanGoOnce = false;
+                transform.Translate(Vector3.right * speed * Time.deltaTime);
             }
         }
     }
 
-    IEnumerator EndStuff()
-    {
-        while(Vector3.Distance(transform.position, player.position) > distanceThreshold)
-        {
-            transform.Translate(Vector3.right * speed * Time.deltaTime);
-            yield return null;
-        }
-    } 
 }
 

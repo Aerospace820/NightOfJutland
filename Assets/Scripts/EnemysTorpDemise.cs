@@ -13,6 +13,7 @@ public class EnemysTorpDemise : MonoBehaviour
     public UnityEvent NoReloadWompWomp;
     public UnityEvent MouseEnd;
     public UnityEvent CamShake;
+    public UnityEvent End;
     public HealthMouse HealthEvent;
     public ScoreStuff scoreChange;
     public Transform FullShip;
@@ -140,6 +141,10 @@ public class EnemysTorpDemise : MonoBehaviour
             if(IsEnemy)
             {
                 scoreChange.Invoke(EnemyScoreChangeDeath);
+            }
+            if(!IsEnemy)
+            {
+                End.Invoke();
             }
         }
     }

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class LaneSwitcher : MonoBehaviour
 {
+    public UnityEvent Slow, Speed;
     public TextMeshProUGUI SameLane;
     public float TurnPoints;
     private bool CanTurn, IsRight;
@@ -13,7 +15,7 @@ public class LaneSwitcher : MonoBehaviour
     public float UpdateTime = 3f;
     private float CurrentLane = 3f;
     public float DesiredLane, LaneWait, DesiredLaneLX;
-    public float Tolerance, YAngle, speedTurned, xStuff;
+    public float Tolerance, YAngle, speedTurned, xStuff, rotationDuration;
 
     void Start()
     {
@@ -21,6 +23,7 @@ public class LaneSwitcher : MonoBehaviour
         CanTurn = true;
         TurnPoints = 1f;
         SameLane.enabled = false;
+        
     }
 
     void Update()
@@ -65,7 +68,7 @@ public class LaneSwitcher : MonoBehaviour
                 TurnRotate(DesiredLane, DesiredLaneLX);
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha2) && CanTurn)
+            if (Input.GetKeyDown(KeyCode.Alpha3) && CanTurn)
             {
                 DesiredLane = 4f;
                 DesiredLaneLX = 10f;
@@ -73,7 +76,7 @@ public class LaneSwitcher : MonoBehaviour
                 Debug.Log("DoesDetect");
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha3) && CanTurn)
+            if (Input.GetKeyDown(KeyCode.Alpha4) && CanTurn)
             {
                 DesiredLane = 5f;
                 DesiredLaneLX = 30f;
@@ -126,6 +129,7 @@ public class LaneSwitcher : MonoBehaviour
 
     IEnumerator Turn(float NeededX, bool IsRight)
     {
+        Slow.Invoke();
         Debug.Log(IsRight);
         Quaternion targetRotation;
         if (IsRight)
@@ -137,6 +141,8 @@ public class LaneSwitcher : MonoBehaviour
                 transform.position += new Vector3(xStuff * Time.deltaTime, 0f, 0f);
                 yield return null;
             }
+            Quaternion AftertargetRotation = Quaternion.identity;
+            TurnBack(AftertargetRotation);
         }
         else
         {
@@ -147,10 +153,28 @@ public class LaneSwitcher : MonoBehaviour
                 transform.position -= new Vector3(xStuff * Time.deltaTime, 0f, 0f);
                 yield return null;
             }
+            Quaternion AftertargetRotation = Quaternion.identity;
+            TurnBack(AftertargetRotation);
         }
-        Quaternion AftertargetRotation = Quaternion.identity;
-        transform.rotation = Quaternion.Slerp(transform.rotation, AftertargetRotation, Time.deltaTime);
+
+        Speed.Invoke();
         CurrentLane = DesiredLane;
+    }
+
+    void TurnBack(Quaternion afterTargetRotation)
+    {
+        Quaternion initialRotation = transform.rotation;
+        Quaternion targetRotation = afterTargetRotation;
+
+        float elapsedTime = 0f;
+        while (elapsedTime < rotationDuration)
+        {
+            float t = elapsedTime / rotationDuration;
+            transform.rotation = Quaternion.Slerp(initialRotation, targetRotation, t);
+            
+            elapsedTime += Time.deltaTime;
+        }
+        transform.rotation = targetRotation;
     }
 
     IEnumerator SameLaneOhNo()

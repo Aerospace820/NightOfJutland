@@ -4,13 +4,24 @@ using UnityEngine;
 
 public class MovementOfOcean : MonoBehaviour
 {
-    public float MovementSpeed;
+    public float MovementSpeed, MovmementSpeedLow, MovementSpeedHigh;
     private bool ShouldRun;
 
     void Start()
     {
         //PlaceHolder; Delete.
         ShouldRun = true;
+
+    }
+
+    public void SlowDown()
+    {
+        MovementSpeed = MovmementSpeedLow;
+    }
+
+    public void SpeedUp()
+    {
+        MovementSpeed = MovementSpeedHigh;
     }
 
     public void AfterCut()

@@ -8,11 +8,17 @@ public class HorizontalMovement : MonoBehaviour
     public GameObject bullet;
     public GameObject torp;
     public Transform Gunend;
-    public Transform player;
+    public Transform player1, player2, player3;
     public float rotationSpeed, DistanceNeeded;
     public float AttackStatic = 3f;
     public float AttackTime = 3f;
     public bool IsTurret;
+    private Transform player;
+    void Awake()
+    {
+        player = player2;
+    }
+    
     void Update()
     {
         if (player != null)
@@ -44,5 +50,23 @@ public class HorizontalMovement : MonoBehaviour
     {
         GameObject bulletstuff = Instantiate(bullet, Gunend.position, Gunend.rotation);
         Debug.Log("ItHappened");
+        NewPlayer();
+    }
+
+    void NewPlayer()
+    {
+        float PlayerChoose = Random.Range(1,4);
+        if(PlayerChoose == 1f)
+        {
+            player = player1;
+        }
+        if(PlayerChoose == 2f)
+        {
+            player = player2;
+        }
+        if(PlayerChoose == 3f)
+        {
+            player = player3;
+        }
     }
 }

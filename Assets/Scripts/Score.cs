@@ -9,9 +9,8 @@ public class PlayerImprovements : UnityEvent<float> { }
 public class Score : MonoBehaviour
 {
     public PlayerImprovements PlayerStuff;
-    public Canvas WinCanvas;
-    public TextMeshProUGUI scoretext;
-    public Image NoScoreWompWomp;
+    public TextMeshProUGUI scoretext, endscoretext;
+    public UnityEvent NoScoreWompWomp;
     public float GameScore = 0;
     public float WompWompDissaperaTime;
     public float DecreaserShell, DecreaserTorp, DecreaserSearch;
@@ -33,9 +32,8 @@ public class Score : MonoBehaviour
         {
             if(NoScoreWompWomp != null)
             {
-                NoScoreWompWomp.enabled = true;
+                NoScoreWompWomp.Invoke();
                 Debug.Log("Image needa Replaca");
-                StartCoroutine(WompDissaperas());
             }
         }
     }
@@ -58,15 +56,10 @@ public class Score : MonoBehaviour
         return Decreaser;
     }
 
-    IEnumerator WompDissaperas()
-    {
-        yield return new WaitForSeconds(WompWompDissaperaTime);
-        NoScoreWompWomp.enabled = false;
-    }
-
     void Update()
     {
         scoretext.text = GameScore.ToString();
+        endscoretext.text = GameScore.ToString();
     }
 
 

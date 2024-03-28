@@ -262,18 +262,22 @@ public class WeaponsSwitch : MonoBehaviour
         if(TorpImprove == 1)
         {
             MaxTorp += MaxTorpImprov;
+            Debug.Log("Improvement Happened" + MaxTorp);
         }
         if(TorpImprove == 2 && SearchAmountReload > SearchAmountReloadLimit)
         {
             SearchAmountReload -= SearchAmountReloadImprov;
+            Debug.Log("Improvement Happened" + SearchAmountReload);
         }
         if(TorpImprove == 3 && TorpReloadTime > TorpReloadTimeLimit)
         {
             TorpReloadTime -= TorpReloadTimeImprov;
+            Debug.Log("Improvement Happened" + TorpReloadTime);
         }
         if(TorpImprove == 4)
         {
             TorpSpeed.Invoke();
+            Debug.Log("Improvement Happened" + ": Speed, Torp");
         }
     }
 
@@ -283,18 +287,22 @@ public class WeaponsSwitch : MonoBehaviour
         if(SearchImprove == 1)
         {
             MaxSearch += MaxSearchImprov;
+            Debug.Log("Improvement Happened" + MaxSearch);
         }
         if(SearchImprove == 2 && SearchReloadTorp > SearchReloadTorpLimit)
         {
             SearchReloadTorp -= SearchReloadTorpImprov;
+            Debug.Log("Improvement Happened" + SearchReloadTorp);
         }
         if(SearchImprove == 3 && TorpReloadTime > TorpReloadTimeLimit)
         {
             SearchReload += SearchReloadImprov;
+            Debug.Log("Improvement Happened" + SearchReload);
         }
         if(SearchImprove == 4 && WaitTimeSearch > WaitTimeSearchLimit)
         {
             WaitTimeSearch -= WaitTimeSearchImprov;
+            Debug.Log("Improvement Happened" + WaitTimeSearch);
         }
     }
 
@@ -304,18 +312,22 @@ public class WeaponsSwitch : MonoBehaviour
         if(ShotImprove == 1)
         {
             MaxShots += MaxShotsImprov;
+            Debug.Log("Improvement Happened" + MaxShots);
         }
         if(ShotImprove == 2 && ShotReloadShot > ShotReloadShotLimit)
         {
             ShotReloadShot -= ShotReloadShotImprov;
+            Debug.Log("Improvement Happened" + ShotReloadShot);
         }
         if(ShotImprove == 3 && ShotReloadTime > ShotReloadTimeLimit)
         {
             ShotReloadTime -= ShotReloadTimeImprov;
+            Debug.Log("Improvement Happened" + ShotReloadTime);
         }
         if(ShotImprove == 4)
         {
             ShotSpeed.Invoke();
+            Debug.Log("Improvement Happened" + ": Speed, Shot");
         }
     }
 
