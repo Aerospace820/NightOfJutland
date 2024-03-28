@@ -21,10 +21,11 @@ public class EnemysTorpDemise : MonoBehaviour
     public string TorpTag, BulletTag, ShipTag;
     public float TorpDam, BulletDam, RqXPos, EnemyScoreChangeShot, EnemyScoreChangeDeath;
     public float SpeedDown, YAxisNeeded;
-    public float Health = 100f;
+    public float Health = 100f, MoreHealth, SecondsHealth, LesSecondsHealth, LesSecondsHealthLimit;
     public bool IsEnemy;
     private bool IsMouse = false, O = true, Tw = true, Th = true, F = true;
     private bool OnlyOncecanThyDie = true;
+    private float timer = 0f;
     public float detectionRadius;
     void Start()
     {
@@ -32,6 +33,14 @@ public class EnemysTorpDemise : MonoBehaviour
         Explosion2.Stop();
         Explosion3.Stop();
         Explosion4.Stop();
+    }
+
+    public void HealthImprove()
+    {
+        if(SecondsHealth > LesSecondsHealthLimit)
+        {
+            SecondsHealth -= LesSecondsHealth;
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -109,6 +118,14 @@ public class EnemysTorpDemise : MonoBehaviour
                 Explosion4.Play();
                 Debug.Log("Somethinghappened4");
                 CamShake.Invoke();
+            }
+            timer += Time.deltaTime;
+
+            if (timer >= SecondsHealth && Health > Health - MoreHealth)
+            {
+                timer = 0f;
+
+                Health += MoreHealth;
             }
         }
 

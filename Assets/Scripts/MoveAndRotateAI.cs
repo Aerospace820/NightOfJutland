@@ -6,7 +6,7 @@ public class MoveAndRotateAI : MonoBehaviour
 {
     public Transform player;
     private bool CanGo;
-    public float speed, distanceThreshold;
+    public float speed, distanceThreshold, playerDistance1, playerDistance2;
     void Awake()
     {
         CanGo = false;
@@ -27,7 +27,11 @@ public class MoveAndRotateAI : MonoBehaviour
                 transform.Translate(Vector3.right * speed * Time.deltaTime);
             }
         }
+
+
     }
+
+
 
 }
 
