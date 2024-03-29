@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 [System.Serializable]
@@ -10,24 +11,33 @@ public class GameObjectProbability
     [Range(0f, 1f)]
     public float probability;
 }
-
+  
 public class SonarUIList : MonoBehaviour
 {
     public List<GameObjectProbability> objectProbabilities = new List<GameObjectProbability>();
     private List<GameObject> revealedObjects = new List<GameObject>();
+    public UnityEvent onFirstRKeyPress;
+    public UnityEvent onSecondRKeyPress;
+
+    private bool isFirstRKeyPressed = true;
 
     void Start()
     {
-        foreach (var prob in objectProbabilities)
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            if (Random.value < prob.probability)
+            if (isFirstRKeyPressed)
             {
-                foreach (var obj in prob.objects)
-                {
-                    obj.SetActive(true);
-                    revealedObjects.Add(obj);
-                }
+                onFirstRKeyPress.Invoke();
             }
+            else
+            {
+                onSecondRKeyPress.Invoke();
+            }
+            isFirstRKeyPressed = !isFirstRKeyPressed;
         }
     }
 

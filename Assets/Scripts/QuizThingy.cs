@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
+public class RadioMore : UnityEvent<float> { }
 public class QuizThingy : MonoBehaviour
 {
+    public RadioMore RadioQuiz;
     public float timeLimit;
     public float correctAnswer;
+    public float NumberForQuiz = 2f;
 
     private bool gameActive = false;
 
@@ -38,7 +42,7 @@ public class QuizThingy : MonoBehaviour
                 if (pressedButton == correctAnswer)
                 {
                     Debug.Log("Correct button pressed!");
-                    Debug.Log("Something Sonar Happens");
+                    RadioQuiz.Invoke(NumberForQuiz);
                 }
                 else
                 {

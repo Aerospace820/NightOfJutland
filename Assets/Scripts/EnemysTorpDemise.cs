@@ -11,7 +11,7 @@ public class EnemysTorpDemise : MonoBehaviour
 {
     public ParticleSystem Explosion1, Explosion2, Explosion3, Explosion4;
     public UnityEvent NoReloadWompWomp;
-    public UnityEvent MouseEnd;
+    public UnityEvent MouseEnd, SonarStuff;
     public UnityEvent CamShake;
     public UnityEvent End;
     public HealthMouse HealthEvent;
@@ -131,24 +131,36 @@ public class EnemysTorpDemise : MonoBehaviour
 
         if(IsEnemy)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit))
+            if(Health < 76f && O)
             {
-                if (hit.collider.CompareTag(ShipTag) && Vector3.Distance(hit.collider.transform.position, transform.position) <= detectionRadius)
-                {
-                    if(transform.position.x > RqXPos)
-                    {
-                        if(IsEnemy)
-                        {
-                            Debug.Log("MouseIsOver2");
-                            HealthEvent.Invoke(Health, UIHealthState);
-                            IsMouse = true;
-                        }
-                    }
-                }
+                O = false;
+                Explosion1.Play();
+                Debug.Log("Somethinghappened1");
+                CamShake.Invoke();
             }
+            if(Health < 50f && Tw)
+            {
+                Tw = false;
+                Explosion2.Play();
+                Debug.Log("Somethinghappened2");
+                CamShake.Invoke();
+            }
+            if(Health < 25f && Th)
+            {
+                Th = false;
+                Explosion3.Play();
+                Debug.Log("Somethinghappened3");
+                CamShake.Invoke();
+            }
+            if(Health < 1f && F)
+            {
+                F = false;
+                Explosion4.Play();
+                Debug.Log("Somethinghappened4");
+                CamShake.Invoke();
+            }
+            
         }
 
         if(Health < 0f && OnlyOncecanThyDie)
@@ -158,6 +170,7 @@ public class EnemysTorpDemise : MonoBehaviour
             if(IsEnemy)
             {
                 scoreChange.Invoke(EnemyScoreChangeDeath);
+                SonarStuff.Invoke();
             }
             if(!IsEnemy)
             {

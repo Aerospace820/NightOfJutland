@@ -2,17 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
 public class MoveStuff : MonoBehaviour
 {
     public RectTransform uiElement;
     public TextMeshProUGUI Text;
-    public Vector2 targetPosition;
+    public Vector2 targetPosition, orginalishIshPosition;
     public float moveSpeed = 1f;
     public float waitTime = 2f;
     public bool NotEnd;
     public bool HealthPanel;
-    private bool CanMoveOnce = true;
+    private bool CanMoveOnce = true, CanMoveSomething = false;
 
     void Update()
     {
@@ -23,7 +22,17 @@ public class MoveStuff : MonoBehaviour
                 OnMove();
             }
         }
+        Debug.Log(CanMoveSomething);
     }
+
+    public void MoveOnSomething()
+    {
+        if(CanMoveSomething)
+        {
+            originalPosition = orginalishIshPosition;
+            StartCoroutine(MoveEnd());
+        }
+    } 
 
     private Vector2 originalPosition;
 
@@ -36,6 +45,21 @@ public class MoveStuff : MonoBehaviour
             originalPosition = uiElement.anchoredPosition;
             StartCoroutine(MoveCoroutine());
         }
+    }
+
+    private IEnumerator MoveEnd()
+    {
+        float startTime = Time.time;
+        float journeyLength = Vector2.Distance(targetPosition, originalPosition);
+        while (Time.time - startTime < moveSpeed)
+        {
+            float fracJourney = (Time.time - startTime) / moveSpeed;
+            uiElement.anchoredPosition = Vector2.Lerp(targetPosition, originalPosition, fracJourney);
+            yield return null;
+        }
+
+        uiElement.anchoredPosition = originalPosition;
+
     }
 
     private IEnumerator MoveCoroutine()
@@ -52,6 +76,7 @@ public class MoveStuff : MonoBehaviour
         uiElement.anchoredPosition = targetPosition;
 
         yield return new WaitForSeconds(waitTime);
+        CanMoveSomething = true;
 
         if(NotEnd)
         {

@@ -39,7 +39,7 @@ public class FlankingManuevur : MonoBehaviour
         {
             if(Mathf.Abs(transform.position.x - player.position.x) < distanceThreshold)
             {
-                transform.Translate(-Vector3.right * speed * Time.deltaTime);
+                transform.Translate(Vector3.right * speed * Time.deltaTime);
             }
         }
     }

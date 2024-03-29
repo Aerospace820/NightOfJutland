@@ -10,6 +10,8 @@ public class WeaponsSwitch : MonoBehaviour
     public TMP_Text SearchText, TorpedoText, ShellText;
     public Transform TorpedoLauncher1, TorpedoLauncher2, GunEnd1, GunEnd2;
     public GameObject Torpedo, Bullet;
+    public AudioClip AttackClip;
+    public AudioSource musicSource;
     public Light SearchLight1, SearchLight2;
     public Light Ship1, Ship2, Ship3;
     public float SearchReload, SearchAmountReload;
@@ -37,6 +39,7 @@ public class WeaponsSwitch : MonoBehaviour
         SearchLightInactive();
         StartCoroutine(ReloadSearchersAndTorps());
         StartCoroutine(MoreShots());
+        musicSource.clip = AttackClip;
         NothingMultiple();
     }
 
@@ -51,44 +54,47 @@ public class WeaponsSwitch : MonoBehaviour
 
     void OnMouseDown()
     {
-        if(MouseNumber == 1f)
+        if(Input.GetKeyDown(KeyCode.LeftShift) | Input.GetKeyDown(KeyCode.RightShift))
         {
-            if(NoMultipleShots && ShotAmount > 0f)
+            if(MouseNumber == 1f)
             {
-                NoMultipleShots = false;
-                StartCoroutine(ShotReloads());
+                if(NoMultipleShots && ShotAmount > 0f)
+                {
+                    NoMultipleShots = false;
+                    StartCoroutine(ShotReloads());
 
-                int nextTurretIndex = (lastSelectedTurretIndex + 1) % 2;
+                    int nextTurretIndex = (lastSelectedTurretIndex + 1) % 2;
 
-                Transform GunShoot = nextTurretIndex == 0 ? GunEnd1 : GunEnd2;
-                Instantiate(Bullet, GunShoot.position, GunShoot.rotation);
+                    Transform GunShoot = nextTurretIndex == 0 ? GunEnd1 : GunEnd2;
+                    Instantiate(Bullet, GunShoot.position, GunShoot.rotation);
 
-                lastSelectedTurretIndex = nextTurretIndex;
+                    lastSelectedTurretIndex = nextTurretIndex;
+                }
             }
-        }
 
-        if(MouseNumber == 2f)
-        {
-            if(NoMultipleTorps && TorpAmount > 0f)
+            if(MouseNumber == 2f)
             {
-                NoMultipleTorps = false;
-                StartCoroutine(TorpReloads());
+                if(NoMultipleTorps && TorpAmount > 0f)
+                {
+                    NoMultipleTorps = false;
+                    StartCoroutine(TorpReloads());
 
-                int nextTorpedoLauncherIndex = (lastSelectedTorpedoLauncherIndex + 1) % 2;
+                    int nextTorpedoLauncherIndex = (lastSelectedTorpedoLauncherIndex + 1) % 2;
 
-                Transform TorpedoLaunch = nextTorpedoLauncherIndex == 0 ? TorpedoLauncher1 : TorpedoLauncher2;
-                Instantiate(Torpedo, TorpedoLaunch.position, TorpedoLaunch.rotation);
+                    Transform TorpedoLaunch = nextTorpedoLauncherIndex == 0 ? TorpedoLauncher1 : TorpedoLauncher2;
+                    Instantiate(Torpedo, TorpedoLaunch.position, TorpedoLaunch.rotation);
 
-                lastSelectedTorpedoLauncherIndex = nextTorpedoLauncherIndex;
+                    lastSelectedTorpedoLauncherIndex = nextTorpedoLauncherIndex;
+                }
             }
-        }
 
-        if(MouseNumber == 3f)
-        {
-            if(NoMultipleLights && SearchAmount > 0f)
+            if(MouseNumber == 3f)
             {
-                TurnOnSearchers();
-                NoMultipleLights = false;
+                if(NoMultipleLights && SearchAmount > 0f)
+                {
+                    TurnOnSearchers();
+                    NoMultipleLights = false;
+                }
             }
         }
     }
@@ -140,11 +146,13 @@ public class WeaponsSwitch : MonoBehaviour
         if(!BattleReloadOnce)
         {
             InBattle = true;
+            musicSource.Play();
         }
 
         else if (BattleReloadOnce)
         {
             InBattle = false;
+            musicSource.Play();
         }
     }
 //BUNCH OF SEARCHLIGHT STUFF
