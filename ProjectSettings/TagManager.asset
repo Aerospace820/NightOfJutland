@@ -9,11 +9,12 @@ TagManager:
   - BulletAlly
   - TorpedoEnemy
   - BulletEnemy
+  - AllyShip
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - End
   - Water
   - UI
   - 

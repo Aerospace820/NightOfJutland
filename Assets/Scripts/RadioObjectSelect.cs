@@ -31,5 +31,5 @@ public class RadioObjectSelect : MonoBehaviour
     {
         pair.gameObject.SetActive(true);
         pair.onActivation.Invoke();
-    }
+    }  
 }

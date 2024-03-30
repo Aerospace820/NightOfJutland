@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
+[System.Serializable]
+public class EndEvent : UnityEvent<bool> { }
 public class TriggerEnter : MonoBehaviour
 {
+    public EndEvent TheEnd;
     public UnityEvent ShipGo;
     public Transform Player;
     public float MaxZ, MinZ;
+    public bool IsLast;
     void Start()
     {
         float ZPosition = Random.Range(MinZ, MaxZ); 
@@ -15,9 +18,17 @@ public class TriggerEnter : MonoBehaviour
         newPosition.z = ZPosition;
         transform.position = newPosition;
     }
-    void OnTriggerEnter()
+    void OnTriggerEnter(Collider other)
     {
-        ShipGo.Invoke();
-        Debug.Log("Sup Trigger got Entered fr fr");
+        if(other.CompareTag("Player"))
+        {
+            ShipGo.Invoke();
+            Debug.Log("Sup Trigger got Entered fr fr");
+        }
+
+        if(IsLast)
+        {
+            TheEnd.Invoke(IsLast);
+        }
     }
 }

@@ -8,7 +8,7 @@ using UnityEngine.Events;
 public class LaneSwitcher : MonoBehaviour
 {
     public UnityEvent Slow, Speed;
-    public TextMeshProUGUI SameLane;
+    public UnityEvent SameLane;
     public float TurnPoints;
     private bool CanTurn, IsRight;
     public float UpdateTimeStatic;
@@ -22,7 +22,6 @@ public class LaneSwitcher : MonoBehaviour
         //PLACEHOLDER
         CanTurn = true;
         TurnPoints = 1f;
-        SameLane.enabled = false;
         
     }
 
@@ -179,9 +178,8 @@ public class LaneSwitcher : MonoBehaviour
 
     IEnumerator SameLaneOhNo()
     {
-        SameLane.enabled = true;
-        yield return new WaitForSeconds(LaneWait);
-        SameLane.enabled = false;
+        SameLane.Invoke();
+        yield return null;
     }
 
     public void IncreaseTurn()

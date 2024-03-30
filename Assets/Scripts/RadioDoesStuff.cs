@@ -1,16 +1,15 @@
-using System.Collections;
+  using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class RadioDoesStuff : MonoBehaviour
 {
+     public AudioSource audioSource;
+    public float moreSonar = 2f;
     public UnityEvent EventShip1, EventShip2;
-    public GameObject Player;
-    public Transform AudioThing;
     public float Ship1, Ship2;
-    public float RadioScore, PlusImage, PlusQuiz, Division;
-    private float followRange;
+    public float RadioScore, PlusImage, PlusQuiz;
     private Camera mainCamera;
     
     void Start()
@@ -32,18 +31,23 @@ public class RadioDoesStuff : MonoBehaviour
 
     void Update()
     {
-        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = 0f;
+        ShipList();
+        SonarList();
+    }
 
-        float distance = Vector3.Distance(mousePosition, Player.transform.position);
-
-        if (distance <= followRange)
+    void SonarList()
+    {
+        if (audioSource == null)
         {
-            AudioThing.position = mousePosition;
+            Debug.LogWarning("AudioSource reference is not set.");
+            return;
         }
 
-        ShipList();
-        RadioList();
+        float additionalSonar = (float)(RadioScore / 10) * moreSonar;
+        float audioSourceRange = audioSource.maxDistance;
+        float sonarRange = audioSourceRange + additionalSonar;
+
+        Debug.Log("Sonar range: " + sonarRange);
     }
 
     void ShipList()
@@ -58,12 +62,5 @@ public class RadioDoesStuff : MonoBehaviour
             EventShip2.Invoke();
         }
     }
-
-    void RadioList()
-    {
-        followRange = RadioScore/Division;
-    }
-
-
 
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+[System.Serializable]
 public class RadioMore2 : UnityEvent<float> { }
 
 public class RadioInfoYes : MonoBehaviour
@@ -11,7 +12,7 @@ public class RadioInfoYes : MonoBehaviour
     public RadioMore2 onTrigger;
 
     private float lastInvokeTime = 0f;
-    private float invokeInterval = 2f;
+    public float invokeInterval;
 
     public void YesImage()
     {

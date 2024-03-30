@@ -2,25 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 public class MoveStuff : MonoBehaviour
 {
+    public UnityEvent OnlyOne;
+    private OnlyOneInfo OnlyOneInfo;
     public RectTransform uiElement;
     public TextMeshProUGUI Text;
     public Vector2 targetPosition, orginalishIshPosition;
-    public float moveSpeed = 1f;
+    public float moveSpeed = 1f, MovespeedInfo;
     public float waitTime = 2f;
     public bool NotEnd;
-    public bool HealthPanel;
-    private bool CanMoveOnce = true, CanMoveSomething = false;
+    public bool HealthPanel, InfoPanel;
+    private bool CanMoveOnce = true, CanMoveSomething = false, OtherChecker;
 
     void Update()
     {
+        OtherChecker = OnlyOneInfo.IsFree;
         if(HealthPanel)
         {
             if(Input.GetKeyDown(KeyCode.Tab))
             {
                 OnMove();
             }
+        }
+        if(InfoPanel)
+        {
+            Debug.Log("InfoFreeInMove" + OnlyOneInfo.IsFree);
         }
         Debug.Log(CanMoveSomething);
     }
@@ -38,9 +46,19 @@ public class MoveStuff : MonoBehaviour
 
     public void OnMove()
     {
-        if(CanMoveOnce)
+        if(CanMoveOnce && !InfoPanel)
         {
             Text.enabled  = true;
+            CanMoveOnce = false;
+            originalPosition = uiElement.anchoredPosition;
+            StartCoroutine(MoveCoroutine());
+        }
+
+        if(CanMoveOnce && InfoPanel && OtherChecker)
+        {
+            OnlyOne.Invoke();
+            Debug.Log("OtherCheck is:" + OtherChecker);
+            Text.enabled = true;
             CanMoveOnce = false;
             originalPosition = uiElement.anchoredPosition;
             StartCoroutine(MoveCoroutine());
@@ -80,16 +98,7 @@ public class MoveStuff : MonoBehaviour
 
         if(NotEnd)
         {
-            startTime = Time.time;
-            journeyLength = Vector2.Distance(targetPosition, originalPosition);
-            while (Time.time - startTime < moveSpeed)
-            {
-                float fracJourney = (Time.time - startTime) / moveSpeed;
-                uiElement.anchoredPosition = Vector2.Lerp(targetPosition, originalPosition, fracJourney);
-                yield return null;
-            }
-
-            uiElement.anchoredPosition = originalPosition;
+            StartCoroutine(MoveEnd());
         }
         CanMoveOnce = true;
         

@@ -5,13 +5,24 @@ using UnityEngine.Events;
 
 public class DialougeChooser : MonoBehaviour
 {
-    public UnityEvent Attack;
+    public UnityEvent British, German;
     public AudioClip whistle;
     public AudioSource audioSource;
 
-    public void WhenHappened()
+    public void DialougeStuff(bool IsBritsh)
     {
-        Attack.Invoke();
+        if(IsBritsh)
+        {
+            British.Invoke();
+        }
+        else if(!IsBritsh)
+        {
+            German.Invoke();
+        }
+        else
+        {
+            Debug.Log("Womp Womp No Work");
+        }
         audioSource.clip = whistle;
         audioSource.Play();
     }

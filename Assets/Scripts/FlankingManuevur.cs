@@ -8,39 +8,30 @@ public class FlankingManuevur : MonoBehaviour
     public string targetTag;
     public float rotationSpeed;
     public float chanceOfRotation, distanceThreshold, speed; 
-    private bool HasTurned = false;
-
     private HashSet<GameObject> detectedObjects = new HashSet<GameObject>();
 
     void Update()
     {
-        float randomValue = Random.value;
-
-        if (randomValue < chanceOfRotation)
+        GameObject[] newObjects = GameObject.FindGameObjectsWithTag(targetTag);
+        foreach (var obj in newObjects)
         {
-            GameObject[] newObjects = GameObject.FindGameObjectsWithTag(targetTag);
-
-            foreach (var obj in newObjects)
+            if (!detectedObjects.Contains(obj))
             {
-                if (!detectedObjects.Contains(obj))
+                detectedObjects.Add(obj);
+                float randomValue = Random.Range(0.0f, 1.0f);
+                Debug.Log(randomValue);
+                if(randomValue < chanceOfRotation)
                 {
-                    Quaternion targetRotation = Quaternion.Euler(0f, 20f, 0f);
-
-                    obj.transform.rotation = Quaternion.Slerp(obj.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-                    
-                    HasTurned = true;
-
-                    detectedObjects.Add(obj);
+                    PerformFlankingManeuver(obj);
                 }
             }
         }
 
-        if(HasTurned)
-        {
-            if(Mathf.Abs(transform.position.x - player.position.x) < distanceThreshold)
-            {
-                transform.Translate(Vector3.right * speed * Time.deltaTime);
-            }
-        }
+    }
+
+    void PerformFlankingManeuver(GameObject obj)
+    {
+        Quaternion targetRotation = Quaternion.Euler(0f, 20f, 0f);
+        obj.transform.rotation = Quaternion.Slerp(obj.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 }

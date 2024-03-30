@@ -7,13 +7,15 @@ using UnityEngine.Events;
 public class HealthMouse : UnityEvent<float, string> { } 
 [System.Serializable]
 public class ScoreStuff : UnityEvent<float> { }
+[System.Serializable]
+public class EndingBad : UnityEvent<bool> { }
 public class EnemysTorpDemise : MonoBehaviour
 {
     public ParticleSystem Explosion1, Explosion2, Explosion3, Explosion4;
     public UnityEvent NoReloadWompWomp;
     public UnityEvent MouseEnd, SonarStuff;
     public UnityEvent CamShake;
-    public UnityEvent End;
+    public EndingBad End;
     public HealthMouse HealthEvent;
     public ScoreStuff scoreChange;
     public Transform FullShip;
@@ -27,6 +29,7 @@ public class EnemysTorpDemise : MonoBehaviour
     private bool OnlyOncecanThyDie = true;
     private float timer = 0f;
     public float detectionRadius;
+    private bool EndGood = false;
     void Start()
     {
         Explosion1.Stop();
@@ -163,7 +166,7 @@ public class EnemysTorpDemise : MonoBehaviour
             
         }
 
-        if(Health < 0f && OnlyOncecanThyDie)
+        if(Health < 1f && OnlyOncecanThyDie)
         {
             OnlyOncecanThyDie = false;
             StartCoroutine(UnderWaves());
@@ -174,7 +177,7 @@ public class EnemysTorpDemise : MonoBehaviour
             }
             if(!IsEnemy)
             {
-                End.Invoke();
+                End.Invoke(EndGood);
             }
         }
     }

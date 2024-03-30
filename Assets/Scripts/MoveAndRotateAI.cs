@@ -5,46 +5,62 @@ using UnityEngine;
 public class MoveAndRotateAI : MonoBehaviour
 {
     public Transform player;
-    private bool CanGo, CanGoAlly;
-    public float speed, distanceThreshold;
-    void Awake()
+    public float speed, distanceThreshold, waitTime, stopTime;
+
+    private bool canGo = false;
+    private bool canGoAlly = false;
+    private bool isGoingBack = false;
+
+    private void Awake()
     {
-        CanGo = false;
-        CanGoAlly = false;
+        canGo = false;
+        canGoAlly = false;
     }
 
     public void LetsGo()
     {
-        CanGo = true;
-        Debug.Log("Sup, We 1 Moving here");
+        canGo = true;
+        Debug.Log("Moving towards player");
     }
 
     public void LetsGoMoreShip()
     {
-        CanGoAlly = true;
-        Debug.Log("ReceivedStuff");
+        canGoAlly = true;
+        Debug.Log("Moving further away from player");
     }
 
-    void Update()
+    private void Update()
     {
-        if (CanGo)
+        if (canGo)
         {
-            if(Mathf.Abs(transform.position.x - player.position.x) < distanceThreshold)
+            if (Mathf.Abs(transform.position.x - player.position.x) < distanceThreshold)
             {
                 transform.Translate(Vector3.right * speed * Time.deltaTime);
             }
+            else if (!isGoingBack)
+            {
+                StartCoroutine(GoBack());
+            }
+        }
+        else if (isGoingBack)
+        {
+            transform.Translate(-Vector3.right * speed * Time.deltaTime);
         }
 
-        if (CanGoAlly)
+        if (canGoAlly)
         {
-            if(Mathf.Abs(transform.position.x - player.position.x) > distanceThreshold)
+            if (Mathf.Abs(transform.position.x - player.position.x) > distanceThreshold)
             {
                 transform.Translate(Vector3.right * speed * Time.deltaTime);
             }
         }
     }
 
-
-
+    private IEnumerator GoBack()
+    {
+        yield return new WaitForSeconds(waitTime);
+        isGoingBack = true;
+        canGo = false;
+        Debug.Log("Returning back");
+    }
 }
-
