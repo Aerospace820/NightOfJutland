@@ -7,24 +7,46 @@ public class CameraSize : MonoBehaviour
     public Camera orthoCamera;
     public Transform Player;
     public float targetSize1, targetSize2;
-    public float changeSpeed, zoomSpeed;
+    public float changeSpeed, zoomSpeed, WaitTime2;
     public float minZoom, maxZoom;
-    private bool DecreaseYes;
+    private bool DecreaseYes, CanChange = false;
     public float shakeDuration;
     public float shakeIntensity;
     private Vector3 originalPosition;
+    void Awake()
+    {
+        Vector3 newPosition = transform.position;
+        newPosition.x = Player.position.x - 20f;
+        transform.position = newPosition;
+        Camera.main.orthographicSize = targetSize1;
+        StartCoroutine(StartChainge());
+    }
+
+    IEnumerator StartChainge()
+    {
+        yield return new WaitForSeconds(WaitTime2);
+        CanChange = true;
+    }
 
     void Update()
     {
-        Vector3 newPosition = transform.position;
-        newPosition.x = Player.position.x;
-        transform.position = newPosition;
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if (scroll != 0f)
+        if(Player != null && CanChange)
         {
-            float newZoom = Camera.main.orthographicSize - scroll * zoomSpeed * Time.deltaTime;
-            newZoom = Mathf.Clamp(newZoom, minZoom, maxZoom);
-            Camera.main.orthographicSize = newZoom;
+            Vector3 newPosition = transform.position;
+            newPosition.x = Player.position.x - 20f;
+            transform.position = newPosition;
+            float scroll = Input.GetAxis("Mouse ScrollWheel");
+            if (scroll != 0f)
+            {
+                float newZoom = Camera.main.orthographicSize - scroll * zoomSpeed * Time.deltaTime;
+                newZoom = Mathf.Clamp(newZoom, minZoom, maxZoom);
+                Camera.main.orthographicSize = newZoom;
+            }
+        }
+
+        if(Player == null)
+        {
+            Camera.main.orthographicSize = targetSize2;
         }
     }
 

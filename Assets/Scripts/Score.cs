@@ -9,15 +9,21 @@ public class PlayerImprovements : UnityEvent<float> { }
 public class Score : MonoBehaviour
 {
     public PlayerImprovements PlayerStuff;
-    public TextMeshProUGUI scoretext, endscoretext;
+    public TextMeshProUGUI scoretext, endscoretext, goodorbad;
     public UnityEvent NoScoreWompWomp;
     public float GameScore = 0;
     public float WompWompDissaperaTime;
-    public float DecreaserShell, DecreaserTorp, DecreaserSearch;
+    public float DecreaserShell, DecreaserTorp, DecreaserSearch, friednlyfire;
+    private string goodbad;
     
     public void IncreaseScore(float Increaser)
     {
         GameScore += Increaser;
+    }
+
+    public void FreindlyFireYes()
+    {
+        GameScore -= friednlyfire;
     }
 
     public void DecreaseScore(float TorpSearchShell)
@@ -58,8 +64,17 @@ public class Score : MonoBehaviour
 
     void Update()
     {
-        scoretext.text = GameScore.ToString();
-        endscoretext.text = GameScore.ToString();
+        if(GameScore < 1f)
+        {
+            goodbad = "Oh...";
+        }
+        else
+        {
+            goodbad = "Good Job!";
+        }
+        scoretext.text = "Score: " + GameScore.ToString();
+        endscoretext.text = "Your End Score is" + GameScore.ToString();
+        goodorbad.text = goodbad;
     }
 
 

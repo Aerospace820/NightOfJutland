@@ -7,14 +7,15 @@ using TMPro;
 
 public class EndCode : MonoBehaviour
 {
-    public LayerMask targetLayer;
+    public List<GameObject> objectsToDisable;
     public TextMeshProUGUI text1, text2;
     public Canvas EndCanvas;
     public Image acheviment1, Acheivment2;
     public Image GoodImage, BadImage;
-    public float EndWaitTime;
+    public float EndWaitTimeGood, EndWaitTimeBad;
     public float ShipsSunk, ShipsNeeded;
     public string Questions, Actual1, Actual2;
+    private float EndWaitTime;
     void Start()
     {
         EndCanvas.enabled = false;
@@ -22,6 +23,8 @@ public class EndCode : MonoBehaviour
         Acheivment2.enabled = false;
         text1.text =  Questions;
         text2.text = Questions;
+        BadImage.enabled = false;
+        GoodImage.enabled = false;
     }
 
     public void IncreaseShips()
@@ -49,11 +52,13 @@ public class EndCode : MonoBehaviour
     {
         if(EndGreat)
         {
+            EndWaitTime = EndWaitTimeGood;
             GoodImage.enabled = true;
         }
 
         else if (!EndGreat)
         {
+            EndWaitTime = EndWaitTimeBad;
             BadImage.enabled = true;
         }
         StartCoroutine(TheEnd());
@@ -63,24 +68,15 @@ public class EndCode : MonoBehaviour
     {
         yield return new WaitForSeconds(EndWaitTime);
         EndCanvas.enabled = true;
-        DisableObjects();
-    }
+        DisableObjects();    
+        }
 
     void DisableObjects()
     {
-        GameObject[] allObjects = FindObjectsOfType<GameObject>();
-        foreach (GameObject obj in allObjects)
+        foreach (GameObject obj in objectsToDisable)
         {
-            if (!IsOnLayer(obj))
-            {
-                obj.SetActive(false);
-            }
+            obj.SetActive(false);
         }
     }
 
-    bool IsOnLayer(GameObject obj)
-    {
-        int objLayer = obj.layer;
-        return ((targetLayer.value & (1 << objLayer)) > 0);
-    }
 }

@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MoveAndRotateAI : MonoBehaviour
 {
+    public UnityEvent Dialouge;
     public Transform player;
     public float speed, distanceThreshold, waitTime, stopTime;
 
     private bool canGo = false;
     private bool canGoAlly = false;
-    private bool isGoingBack = false;
+    private bool isGoingBack = false, DidDialogueOnce = true;
 
     private void Awake()
     {
@@ -39,6 +41,11 @@ public class MoveAndRotateAI : MonoBehaviour
             }
             else if (!isGoingBack)
             {
+                if(DidDialogueOnce)
+                {   
+                    DidDialogueOnce = false;
+                    Dialouge.Invoke();
+                }
                 StartCoroutine(GoBack());
             }
         }

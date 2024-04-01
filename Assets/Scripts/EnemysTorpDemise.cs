@@ -93,6 +93,14 @@ public class EnemysTorpDemise : MonoBehaviour
     {
         if(!IsEnemy)
         {
+            timer += Time.deltaTime;
+
+            if (timer >= SecondsHealth && Health < 100f)
+            {
+                timer = 0f;
+
+                Health += MoreHealth;
+            }
             HealthEvent.Invoke(Health, UIHealthState);
             if(Health < 76f && O)
             {
@@ -123,13 +131,6 @@ public class EnemysTorpDemise : MonoBehaviour
                 CamShake.Invoke();
             }
             timer += Time.deltaTime;
-
-            if (timer >= SecondsHealth && Health > Health - MoreHealth)
-            {
-                timer = 0f;
-
-                Health += MoreHealth;
-            }
         }
 
         if(IsEnemy)

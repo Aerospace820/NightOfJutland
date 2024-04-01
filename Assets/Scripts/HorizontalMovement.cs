@@ -50,7 +50,6 @@ public class HorizontalMovement : MonoBehaviour
         if(IsBattleShip)
         {
             GameObject bulletstuff2 = Instantiate(bullet, Gunend.position, Gunend.rotation);
-            GameObject bulletstuff3 = Instantiate(bullet, Gunend.position, Gunend.rotation);
         }
         Debug.Log("Shot fired");
         AssignNewPlayer();

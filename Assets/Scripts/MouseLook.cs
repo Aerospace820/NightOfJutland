@@ -7,7 +7,7 @@ public class MouseLook : MonoBehaviour
     public GameObject player;
     public Camera mainCamera;
     public float slerpSpeed = 5f;
-    public bool IsTorp, IsSearch;
+    public bool IsTorp;
     void Update()
     {
         if(IsTorp)
@@ -44,11 +44,6 @@ public class MouseLook : MonoBehaviour
             float slerpSpeed = 5f;
             Quaternion yRotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0);
             transform.rotation = Quaternion.Slerp(transform.rotation, yRotation, Time.deltaTime * slerpSpeed); 
-        }
-
-        if(IsSearch)
-        {
-            Debug.Log("Womp Womp");
         }
     } 
 }

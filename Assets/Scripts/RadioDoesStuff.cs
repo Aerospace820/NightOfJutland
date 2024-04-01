@@ -18,36 +18,13 @@ public class RadioDoesStuff : MonoBehaviour
     }
     public void PlusImageScore(float RadioPointDecider)
     {
-        if(RadioPointDecider == 1f)
-        {
-            RadioScore += PlusImage;
-        }
-
-        else if (RadioPointDecider == 2f)
-        {
-            RadioScore += PlusQuiz;
-        }
+        RadioScore += RadioPointDecider;
     }
 
     void Update()
     {
         ShipList();
-        SonarList();
-    }
-
-    void SonarList()
-    {
-        if (audioSource == null)
-        {
-            Debug.LogWarning("AudioSource reference is not set.");
-            return;
-        }
-
-        float additionalSonar = (float)(RadioScore / 10) * moreSonar;
-        float audioSourceRange = audioSource.maxDistance;
-        float sonarRange = audioSourceRange + additionalSonar;
-
-        Debug.Log("Sonar range: " + sonarRange);
+        
     }
 
     void ShipList()

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class VolumeSlider : MonoBehaviour
 {
     private Slider slider;
+   
+    
 
     void Start()
     {
@@ -24,5 +26,6 @@ public class VolumeSlider : MonoBehaviour
         {
             slider.value += 0.05f;
         }
+
     }
 }

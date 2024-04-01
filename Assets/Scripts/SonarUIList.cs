@@ -52,7 +52,13 @@ public class SonarUIList : MonoBehaviour
         List<GameObject> unrevealedObjects = new List<GameObject>();
         foreach (var prob in objectProbabilities)
         {
-            unrevealedObjects.AddRange(prob.objects.FindAll(obj => !revealedObjects.Contains(obj)));
+            foreach (var obj in prob.objects)
+            {
+                if (!revealedObjects.Contains(obj))
+                {
+                    unrevealedObjects.Add(obj);
+                }
+            }
         }
 
         if (unrevealedObjects.Count == 0)

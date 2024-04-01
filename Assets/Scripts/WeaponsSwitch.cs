@@ -52,9 +52,9 @@ public class WeaponsSwitch : MonoBehaviour
         BattleReloadOnce = true;
     }
 
-    void OnMouseDown()
+    public void OnMouseDown()
     {
-        if(Input.GetKeyDown(KeyCode.LeftShift) | Input.GetKeyDown(KeyCode.RightShift))
+        if(Input.GetKey(KeyCode.LeftShift) | Input.GetKey(KeyCode.RightShift))
         {
             if(MouseNumber == 1f)
             {
@@ -229,6 +229,12 @@ public class WeaponsSwitch : MonoBehaviour
             ShotAmount++;
         }
         StartCoroutine(MoreShots());
+    }
+
+    public void MoreShotImprovement()
+    {
+        MaxShots += 50f;
+        ShotReloadShot -= 0.5f;
     }
 //BattleStuff
     public void YesBattle()
