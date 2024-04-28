@@ -103,7 +103,6 @@ public class WeaponsSwitch : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Fix Torpedo Rn");
         if(Input.GetKeyDown(KeyCode.C) && NoMultipleLights && SearchAmount > 0f)
         {
             MouseNumber = 3f;
